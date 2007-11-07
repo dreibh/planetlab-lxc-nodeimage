@@ -42,8 +42,8 @@ export PL_BOOTCD=1
 # "Parse" out the packages and groups into the options passed to mkfedora
 # -k = exclude kernel* packages
 options="-k"
-packages=$(grep "^package:.*" base.lst | awk '{print $2}')
-groups=$(grep "^group:.*" base.lst | awk '{print $2}')
+packages=$(pk_getPackages base.lst)
+groups=$(pk_getGroups base.lst)
 for package in ${packages} ; do  options="$options -p $package"; done
 for group in ${groups} ; do options="$options -g $group"; done
 
@@ -52,11 +52,6 @@ vref=${PWD}/base
 install -d -m 755 ${vref}
 pl_makedevs ${vref}
 pl_setup_chroot ${vref} -k ${options}
-
-# Build the base Bootstrap filesystem
-echo "--------STARTING tar'ing PlanetLab-Bootstrap.tar.bz2: $(date)"
-tar -cpjf PlanetLab-Bootstrap.tar.bz2 -C ${vref} .
-echo "--------FINISHED tar'ing PlanetLab-Bootstrap.tar.bz2: $(date)"
 
 for bootstrapfs in bootstrap-filesystems/*.lst ; do
     NAME=$(basename $bootstrapfs .lst)
@@ -111,5 +106,12 @@ for bootstrapfs in bootstrap-filesystems/*.lst ; do
     echo "--------FINISHED tar'ing PlanetLab-Bootstrap-${NAME}.tar.bz2: $(date)"
     echo "--------DONE BUILDING PlanetLab-Bootstrap-${NAME}: $(date)"
 done
+
+# Build the base Bootstrap filesystem
+echo "--------STARTING tar'ing PlanetLab-Bootstrap.tar.bz2: $(date)"
+# clean out yum cache to reduce space requirements
+yum -c ${vref}/etc/yum.conf --installroot=${vdir} -y clean all
+tar -cpjf PlanetLab-Bootstrap.tar.bz2 -C ${vref} .
+echo "--------FINISHED tar'ing PlanetLab-Bootstrap.tar.bz2: $(date)"
 
 exit 0
