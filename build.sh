@@ -116,9 +116,9 @@ for bootstrapfs in bootstrap-filesystems/*.lst ; do
 done
 
 # Build the base Bootstrap filesystem
-echo "--------STARTING tar'ing PlanetLab-Bootstrap.tar.bz2: $(date)"
 # clean out yum cache to reduce space requirements
 yum -c ${vref}/etc/yum.conf --installroot=${vdir} -y clean all
+echo "--------STARTING tar'ing PlanetLab-Bootstrap.tar.bz2: $(date)"
 tar -cpjf PlanetLab-Bootstrap.tar.bz2 -C ${vref} .
 echo "--------FINISHED tar'ing PlanetLab-Bootstrap.tar.bz2: $(date)"
 
