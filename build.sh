@@ -42,8 +42,8 @@ export PL_BOOTCD=1
 # "Parse" out the packages and groups into the options passed to mkfedora
 # -k = exclude kernel* packages
 options="-k"
-packages=$(pk_getPackages base.lst)
-groups=$(pk_getGroups base.lst)
+packages=$(pl_getPackages base.lst)
+groups=$(pl_getGroups base.lst)
 for package in ${packages} ; do  options="$options -p $package"; done
 for group in ${groups} ; do options="$options -g $group"; done
 
