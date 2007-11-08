@@ -50,8 +50,7 @@ for group in ${groups} ; do options="$options -g $group"; done
 # Populate a minimal /dev and then the files for the base PlanetLab-Bootstrap content
 vref=${PWD}/base
 install -d -m 755 ${vref}
-pl_makedevs ${vref}
-pl_setup_chroot ${vref} -k ${options}
+pl_mkfedora ${vref} ${options}
 
 for bootstrapfs in bootstrap-filesystems/*.lst ; do
     NAME=$(basename $bootstrapfs .lst)
@@ -59,8 +58,8 @@ for bootstrapfs in bootstrap-filesystems/*.lst ; do
     echo "--------START BUILDING PlanetLab-Bootstrap-${NAME}: $(date)"
 
     # "Parse" out the packages and groups for yum
-    packages=$(grep "^package:.*" $bootstrapfs | awk '{print $2}')
-    groups=$(grep "^group:.*" $bootstrapfs | awk '{print $2}')
+    packages=$(pl_getPackages $bootstrapfs)
+    groups=$(pl_getGroups $bootstrapfs)
 
     vdir=${PWD}/bootstrap-filesystems/${NAME}
     rm -rf ${vdir}/*
