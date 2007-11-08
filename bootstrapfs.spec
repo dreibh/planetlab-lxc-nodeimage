@@ -69,7 +69,6 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%{_datadir}/%{name}
 /var/www/html/boot/PlanetLab-Bootstrap*.tar.bz2
 
 %changelog
