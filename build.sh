@@ -76,6 +76,11 @@ for bootstrapfs in bootstrap-filesystems/*.lst ; do
     [ -n "$packages" ] && yum -c ${vdir}/etc/yum.conf --installroot=${vdir} -y install $packages
     [ -n "$groups" ] && yum -c ${vdir}/etc/yum.conf --installroot=${vdir} -y groupinstall $groups
 
+    if [ -f "${vdir}/proc/cpuinfo" ] ; then
+	echo "WARNING: some RPM appears to have mounted /proc in ${NAME}. Unmounting it!"
+	umount ${vdir}/proc
+    fi
+
     # Create a copy of the ${NAME} bootstrap filesystem w/o the base
     # bootstrap filesystem and make it smaller.  This is a three step
     # process:
