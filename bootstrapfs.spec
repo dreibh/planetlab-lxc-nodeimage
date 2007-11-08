@@ -30,10 +30,14 @@ BootManager to instantiate a node with a new filesystem.
 %setup -q
 
 %build
+pushd BootstrapFS
 ./build.sh
+popd BootstrapFS
 
 %install
 rm -rf $RPM_BUILD_ROOT
+
+pushd BootstrapFS
 
 install -D -m 644 PlanetLab-Bootstrap.tar.bz2 \
 	$RPM_BUILD_ROOT/var/www/html/boot/PlanetLab-Bootstrap.tar.bz2
@@ -43,6 +47,8 @@ for bootstrapfs in $(ls bootstrap-filesystems/*.lst) ; do
 	install -D -m 644 bootstrap-filesystems/PlanetLab-Bootstrap-${NAME}.tar.bz2 \
 		$RPM_BUILD_ROOT/var/www/html/boot/PlanetLab-Bootstrap-${NAME}.tar.bz2
 done
+
+popd
 
 %clean
 rm -rf $RPM_BUILD_ROOT
