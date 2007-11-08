@@ -47,6 +47,8 @@ groups=$(pl_getGroups base.lst)
 for package in ${packages} ; do  options="$options -p $package"; done
 for group in ${groups} ; do options="$options -g $group"; done
 
+echo "+++++++++++++OPTIONS = ${options}"
+
 # Populate a minimal /dev and then the files for the base PlanetLab-Bootstrap content
 vref=${PWD}/base
 install -d -m 755 ${vref}
@@ -60,6 +62,7 @@ for bootstrapfs in bootstrap-filesystems/*.lst ; do
     # "Parse" out the packages and groups for yum
     packages=$(pl_getPackages $bootstrapfs)
     groups=$(pl_getGroups $bootstrapfs)
+    echo "${NAME} has the following packages and groups: ${packages} ${groups}"
 
     vdir=${PWD}/bootstrap-filesystems/${NAME}
     rm -rf ${vdir}/*
@@ -70,11 +73,12 @@ for bootstrapfs in bootstrap-filesystems/*.lst ; do
     rm -f ${vdir}/var/lib/rpm/__db*
 
     # Install the system vserver specific packages
-    [ -n "$systempackages" ] && yum -c ${vdir}/etc/yum.conf --installroot=${vdir} -y install $systempackages
-    [ -n "$systemgroups" ] && yum -c ${vdir}/etc/yum.conf --installroot=${vdir} -y groupinstall $systemgroups
+    [ -n "$packages" ] && yum -c ${vdir}/etc/yum.conf --installroot=${vdir} -y install $packages
+    [ -n "$groups" ] && yum -c ${vdir}/etc/yum.conf --installroot=${vdir} -y groupinstall $groups
 
-    # Create a copy of the system vserver w/o the vserver reference files and make it smaller. 
-    # This is a three step process:
+    # Create a copy of the ${NAME} bootstrap filesystem w/o the base
+    # bootstrap filesystem and make it smaller.  This is a three step
+    # process:
 
     # step 1: clean out yum cache to reduce space requirements
     yum -c ${vdir}/etc/yum.conf --installroot=${vdir} -y clean all
