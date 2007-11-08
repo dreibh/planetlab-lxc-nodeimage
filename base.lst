@@ -1,3 +1,4 @@
+package: bash
 package: filesystem
 package: udev
 package: coreutils
