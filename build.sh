@@ -42,8 +42,9 @@ export PL_BOOTCD=1
 # "Parse" out the packages and groups into the options passed to mkfedora
 # -k = exclude kernel* packages
 options="-k"
-packages=$(pl_getPackages base.lst)
-groups=$(pl_getGroups base.lst)
+lst="base.lst"
+packages=$(pl_getPackages $lst)
+groups=$(pl_getGroups $lst)
 for package in ${packages} ; do  options="$options -p $package"; done
 for group in ${groups} ; do options="$options -g $group"; done
 
@@ -54,14 +55,14 @@ vref=${PWD}/base
 install -d -m 755 ${vref}
 pl_mkfedora ${vref} ${options}
 
-for bootstrapfs in bootstrap-filesystems/*.lst ; do
-    NAME=$(basename $bootstrapfs .lst)
+for lst in bootstrap-filesystems/*.lst ; do
+    NAME=$(basename $lst .lst)
 
     echo "--------START BUILDING PlanetLab-Bootstrap-${NAME}: $(date)"
 
     # "Parse" out the packages and groups for yum
-    packages=$(pl_getPackages $bootstrapfs)
-    groups=$(pl_getGroups $bootstrapfs)
+    packages=$(pl_getPackages $lst)
+    groups=$(pl_getGroups $lst)
     echo "${NAME} has the following packages and groups: ${packages} ${groups}"
 
     vdir=${PWD}/bootstrap-filesystems/${NAME}
