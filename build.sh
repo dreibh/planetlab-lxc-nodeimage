@@ -45,12 +45,11 @@ export PL_BOOTCD=1
 
 # "Parse" out the packages and groups into the options passed to mkfedora
 # -k = exclude kernel* packages
-options="-k"
 lst="${pldistro}-base.lst"
 popts=$(pl_getPackagesOptions2 ${pl_DISTRO_NAME} $lst)
 gopts=$(pl_getGroupsOptions2 ${pl_DISTRO_NAME} $lst)
 
-options="${popts} ${gopts}"
+options="${popts} ${gopts} -k"
 
 echo "+++++++++++++OPTIONS = ${options}"
 
