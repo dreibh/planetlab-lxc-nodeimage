@@ -65,8 +65,8 @@ for lst in ${pldistro}-filesystems/*.lst ; do
     echo "--------START BUILDING PlanetLab-Bootstrap-${NAME}: $(date)"
 
     # "Parse" out the packages and groups for yum
-    packages=$(pl_getPackages $lst)
-    groups=$(pl_getGroups $lst)
+    packages=$(pl_getPackages2 ${pl_DISTRO_NAME} $lst)
+    groups=$(pl_getGroups2 ${pl_DISTRO_NAME} $lst)
     echo "${NAME} has the following packages and groups: ${packages} ${groups}"
 
     vdir=${PWD}/${pldistro}-filesystems/${NAME}
