@@ -31,6 +31,10 @@ pl_process_fedora_options $@
 shiftcount=$?
 shift $shiftcount
 
+# pldistro expected as $1 - defaults to planetlab
+pldistro=planetlab
+[ -n "$@" ] && pldistro=$1
+
 # Do not tolerate errors
 set -e
 
@@ -42,11 +46,11 @@ export PL_BOOTCD=1
 # "Parse" out the packages and groups into the options passed to mkfedora
 # -k = exclude kernel* packages
 options="-k"
-lst="base.lst"
-packages=$(pl_getPackages $lst)
-groups=$(pl_getGroups $lst)
-for package in ${packages} ; do  options="$options -p $package"; done
-for group in ${groups} ; do options="$options -g $group"; done
+lst="${pldistro}-base.lst"
+popts=$(pl_getPackagesOptions2 ${pl_DISTRO_NAME} $lst)
+gopts=$(pl_getGroupsOptions2 ${pl_DISTRO_NAME} $lst)
+
+options="${popts} ${gopts}"
 
 echo "+++++++++++++OPTIONS = ${options}"
 
@@ -55,7 +59,7 @@ vref=${PWD}/base
 install -d -m 755 ${vref}
 pl_mkfedora ${vref} ${options}
 
-for lst in bootstrap-filesystems/*.lst ; do
+for lst in ${pldistro}-filesystems/*.lst ; do
     NAME=$(basename $lst .lst)
 
     echo "--------START BUILDING PlanetLab-Bootstrap-${NAME}: $(date)"
@@ -65,7 +69,7 @@ for lst in bootstrap-filesystems/*.lst ; do
     groups=$(pl_getGroups $lst)
     echo "${NAME} has the following packages and groups: ${packages} ${groups}"
 
-    vdir=${PWD}/bootstrap-filesystems/${NAME}
+    vdir=${PWD}/${pldistro}-filesystems/${NAME}
     rm -rf ${vdir}/*
     install -d -m 755 ${vdir}
 
@@ -111,7 +115,7 @@ for lst in bootstrap-filesystems/*.lst ; do
     mv ${vdir}-tmp ${vdir}
 
     echo "--------STARTING tar'ing PlanetLab-Bootstrap-${NAME}.tar.bz2: $(date)"
-    tar -cpjf bootstrap-filesystems/PlanetLab-Bootstrap-${NAME}.tar.bz2 -C ${vdir} .
+    tar -cpjf ${pldistro}-filesystems/PlanetLab-Bootstrap-${NAME}.tar.bz2 -C ${vdir} .
     echo "--------FINISHED tar'ing PlanetLab-Bootstrap-${NAME}.tar.bz2: $(date)"
     echo "--------DONE BUILDING PlanetLab-Bootstrap-${NAME}: $(date)"
 done
