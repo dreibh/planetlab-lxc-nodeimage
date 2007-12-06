@@ -45,28 +45,25 @@ export PL_BOOTCD=1
 
 # "Parse" out the packages and groups into the options passed to mkfedora
 # -k = exclude kernel* packages
-lst="${pldistro}-base.lst"
-popts=$(pl_getPackagesOptions2 ${pl_DISTRO_NAME} $lst)
-gopts=$(pl_getGroupsOptions2 ${pl_DISTRO_NAME} $lst)
+pkgsfile=$(pl_locateDistroFile ../build/ ${pldistro} bootstrapfs.pkgs)
 
-options="${popts} ${gopts} -k"
-
-echo "+++++++++++++OPTIONS = ${options}"
+echo "+++++++++++++pkgsfile=$pkgsfile (and -k)"
 
 # Populate a minimal /dev and then the files for the base PlanetLab-Bootstrap content
 vref=${PWD}/base
 install -d -m 755 ${vref}
-pl_mkfedora ${vref} ${options}
+pl_mkfedora ${vref} -k -f $pkgsfile 
 
-for lst in ${pldistro}-filesystems/*.lst ; do
-    NAME=$(basename $lst .lst)
+for pkgs in ../build/config.${pldistro}/bootstrapfs-*.pkgs ; do
+    NAME=$(basename $pkgs .pkgs | sed -e s,bootstrapfs-,,)
 
     echo "--------START BUILDING PlanetLab-Bootstrap-${NAME}: $(date)"
 
     # "Parse" out the packages and groups for yum
-    packages=$(pl_getPackages2 ${pl_DISTRO_NAME} $lst)
-    groups=$(pl_getGroups2 ${pl_DISTRO_NAME} $lst)
-    echo "${NAME} has the following packages and groups: ${packages} ${groups}"
+    packages=$(pl_getPackages ${pl_DISTRO_NAME} $pkgs)
+    groups=$(pl_getGroups ${pl_DISTRO_NAME} $pkgs)
+    echo "${NAME} has the following packages : ${packages}"
+    echo "${NAME} has the following groups : ${groups}"
 
     vdir=${PWD}/${pldistro}-filesystems/${NAME}
     rm -rf ${vdir}/*

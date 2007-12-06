@@ -1,7 +1,0 @@
-package: bash
-package: filesystem
-package: udev
-package: coreutils
-# see former bootmanager/support-files/buildnode.sh
-package: python
-group: PlanetLab
