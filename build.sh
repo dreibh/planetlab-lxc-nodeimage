@@ -43,16 +43,16 @@ set -e
 # would like to pretend that we are.
 export PL_BOOTCD=1
 
-# "Parse" out the packages and groups into the options passed to mkfedora
-# -k = exclude kernel* packages
-pkgsfile=$(pl_locateDistroFile ../build/ ${pldistro} bootstrapfs.pkgs)
-
 echo "+++++++++++++pkgsfile=$pkgsfile (and -k)"
 
 # Populate a minimal /dev and then the files for the base PlanetLab-Bootstrap content
 vref=${PWD}/base
 install -d -m 755 ${vref}
-pl_mkfedora ${vref} -k -f $pkgsfile 
+pl_root_makedevs $vref
+
+pkgsfile=$(pl_locateDistroFile ../build/ ${pldistro} bootstrapfs.pkgs)
+# -k = exclude kernel* packages
+pl_root_mkfedora ${vref} -k -f $pkgsfile 
 
 for pkgs in ../build/config.${pldistro}/bootstrapfs-*.pkgs ; do
     NAME=$(basename $pkgs .pkgs | sed -e s,bootstrapfs-,,)
