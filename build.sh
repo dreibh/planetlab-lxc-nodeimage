@@ -82,6 +82,11 @@ for pkgs in ../build/config.${pldistro}/bootstrapfs-*.pkgs ; do
 	umount ${vdir}/proc
     fi
 
+    # Remove unneeded services
+    for service in util-vserver vprocunhide vservers-default; do
+	chroot ${vdir} /sbin/chkconfig $service off
+    done
+
     # Create a copy of the ${NAME} bootstrap filesystem w/o the base
     # bootstrap filesystem and make it smaller.  This is a three step
     # process:
