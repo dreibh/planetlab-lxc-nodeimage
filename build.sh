@@ -86,9 +86,6 @@ for pkgs in ../build/config.${pldistro}/bootstrapfs-*.pkgs ; do
     for service in util-vserver vprocunhide vservers-default; do
         chroot ${vdir} /sbin/chkconfig $service off
     done
-    
-    # Add site_admin account
-    chroot ${vdir} /usr/sbin/useradd -p "" -u 502 -m site_admin
 
     # Create a copy of the ${NAME} bootstrap filesystem w/o the base
     # bootstrap filesystem and make it smaller.  This is a three step
@@ -117,6 +114,13 @@ for pkgs in ../build/config.${pldistro}/bootstrapfs-*.pkgs ; do
     rm -rf ${vdir}
     rm -f  ${vdir}.changes
     mv ${vdir}-tmp ${vdir}
+    
+    # Add site_admin account
+    chroot ${vdir} /usr/sbin/useradd -p "" -u 502 -m site_admin
+
+	# Disable /etc/cron.*/000-delay.cron.  Used to splay crons.  PL crons
+	# already do this.
+	echo > ${vdir}/etc/sysconfig/crontab
 
     echo "--------STARTING tar'ing PlanetLab-Bootstrap-${NAME}.tar.bz2: $(date)"
     tar -cpjf ${pldistro}-filesystems/PlanetLab-Bootstrap-${NAME}.tar.bz2 -C ${vdir} .
