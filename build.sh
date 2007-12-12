@@ -88,7 +88,7 @@ for pkgs in ../build/config.${pldistro}/bootstrapfs-*.pkgs ; do
     done
     
     # Add site_admin account
-    #chroot ${vdir} /usr/sbin/useradd -p "" -u 502 -m site_admin
+    chroot ${vdir} /usr/sbin/useradd -p "" -u 502 -m site_admin
 
     # Create a copy of the ${NAME} bootstrap filesystem w/o the base
     # bootstrap filesystem and make it smaller.  This is a three step
