@@ -118,9 +118,9 @@ for pkgs in ../build/config.${pldistro}/bootstrapfs-*.pkgs ; do
     # Add site_admin account
     chroot ${vdir} /usr/sbin/useradd -p "" -u 502 -m site_admin
 
-	# Disable /etc/cron.*/000-delay.cron.  Used to splay crons.  PL crons
-	# already do this.
-	echo > ${vdir}/etc/sysconfig/crontab
+    # Disable /etc/cron.*/000-delay.cron.  Used to splay crons.  PL crons
+    # already do this.
+    echo > ${vdir}/etc/sysconfig/crontab
 
     echo "--------STARTING tar'ing PlanetLab-Bootstrap-${NAME}.tar.bz2: $(date)"
     tar -cpjf ${pldistro}-filesystems/PlanetLab-Bootstrap-${NAME}.tar.bz2 -C ${vdir} .
