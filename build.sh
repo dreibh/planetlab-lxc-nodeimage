@@ -115,14 +115,6 @@ for pkgs in ../build/config.${pldistro}/bootstrapfs-*.pkgs ; do
     rm -f  ${vdir}.changes
     mv ${vdir}-tmp ${vdir}
     
-    ### Thierry : there's no useradd in vdir at this stage - it was just cleaned up
-    ### # Add site_admin account
-    ### chroot ${vdir} /usr/sbin/useradd -p "" -u 502 -m site_admin
-    ### 
-    # Disable /etc/cron.*/000-delay.cron.  Used to splay crons.  PL crons
-    # already do this.
-    echo > ${vdir}/etc/sysconfig/crontab
-
     echo "--------STARTING tar'ing PlanetLab-Bootstrap-${NAME}.tar.bz2: $(date)"
     tar -cpjf ${pldistro}-filesystems/PlanetLab-Bootstrap-${NAME}.tar.bz2 -C ${vdir} .
     echo "--------FINISHED tar'ing PlanetLab-Bootstrap-${NAME}.tar.bz2: $(date)"
