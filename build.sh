@@ -10,6 +10,14 @@
 # $Id: buildnode.sh,v 1.12.6.1 2007/08/30 20:09:20 mef Exp $
 #
 
+
+#
+# This will build the Planetlab-Bootstrap.tar.bz2, which comprises
+# the base root image on the node, then create the ${NAME} bootstrap image
+# which is made up of just the additional files needed for a ${NAME} nodegroup 
+# node.
+#
+
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 
 # In both a normal CVS environment and a PlanetLab RPM
@@ -86,6 +94,12 @@ for pkgs in ../build/config.${pldistro}/bootstrapfs-*.pkgs ; do
     for service in util-vserver vprocunhide vservers-default; do
         chroot ${vdir} /sbin/chkconfig $service off
     done
+
+    # Disable splaying of cron.
+    echo > ${vdir}/etc/sysconfig/crontab
+
+    # Add site_admin account
+    chroot ${vdir} /usr/sbin/useradd -p "" -u 502 -m site_admin
 
     # Create a copy of the ${NAME} bootstrap filesystem w/o the base
     # bootstrap filesystem and make it smaller.  This is a three step
