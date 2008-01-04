@@ -42,7 +42,7 @@ pushd BootstrapFS
 install -D -m 644 PlanetLab-Bootstrap.tar.bz2 \
 	$RPM_BUILD_ROOT/var/www/html/boot/PlanetLab-Bootstrap.tar.bz2
 
-for bootstrapfs in $(ls ../build/config.%{pldistro}/bootstrap-*.pkgs) ; do 
+for bootstrapfs in $(ls ../build/config.%{pldistro}/bootstrapfs-*.pkgs) ; do 
     NAME=$(basename $pkgs .pkgs | sed -e s,bootstrapfs-,,)
     install -D -m 644 %{pldistro}-filesystems/PlanetLab-Bootstrap-${NAME}.tar.bz2 \
 		$RPM_BUILD_ROOT/var/www/html/boot/PlanetLab-Bootstrap-${NAME}.tar.bz2
