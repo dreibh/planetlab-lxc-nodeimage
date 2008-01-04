@@ -96,10 +96,10 @@ for pkgs in ../build/config.${pldistro}/bootstrapfs-*.pkgs ; do
     done
 
     # Disable splaying of cron.
-    echo > ${vdir}/etc/sysconfig/crontab
+    echo > ${vref}/etc/sysconfig/crontab
 
     # Add site_admin account
-    chroot ${vdir} /usr/sbin/useradd -p "" -u 502 -m site_admin
+    chroot ${vref} /usr/sbin/useradd -p "" -u 502 -m site_admin
 
     # Create a copy of the ${NAME} bootstrap filesystem w/o the base
     # bootstrap filesystem and make it smaller.  This is a three step
