@@ -1,11 +1,18 @@
+#
+# $Id$
+#
+%define url $URL$
+
 %define name bootstrapfs
 %define version 0.1
-%define release 0%{?pldistro:.%{pldistro}}%{?date:.%{date}}
+%define taglevel 1
+
+%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
 
 Vendor: PlanetLab
 Packager: PlanetLab Central <support@planet-lab.org>
-Distribution: PlanetLab 4.2
-URL: http://svn.planet-lab.org/svn/BootStrapFS/
+Distribution: PlanetLab %{plrelease}
+URL: %(echo %{url} | cut -d ' ' -f 2)
 
 Summary: The PlanetLab Bootstrap Filesystems
 Name: %{name}
