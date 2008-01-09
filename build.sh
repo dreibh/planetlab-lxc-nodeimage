@@ -96,10 +96,11 @@ for pkgs in ../build/config.${pldistro}/bootstrapfs-*.pkgs ; do
     done
 
     # Disable splaying of cron.
-    echo > ${vref}/etc/sysconfig/crontab
+    # At this step, vdir is base, and vref is the set of changes that end up in the nodegroup
+    echo > ${vdir}/etc/sysconfig/crontab
 
     # Add site_admin account
-    chroot ${vref} /usr/sbin/useradd -p "" -u 502 -m site_admin
+    chroot ${vdir} /usr/sbin/useradd -p "" -u 502 -m site_admin
 
     # Create a copy of the ${NAME} bootstrap filesystem w/o the base
     # bootstrap filesystem and make it smaller.  This is a three step
