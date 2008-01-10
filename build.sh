@@ -62,6 +62,8 @@ pkgsfile=$(pl_locateDistroFile ../build/ ${pldistro} bootstrapfs.pkgs)
 # -k = exclude kernel* packages
 pl_root_mkfedora -k -f $pkgsfile ${vref} 
 
+# for distros that do not define bootstrapfs variants
+shopt -s nullglob
 for pkgs in ../build/config.${pldistro}/bootstrapfs-*.pkgs ; do
     NAME=$(basename $pkgs .pkgs | sed -e s,bootstrapfs-,,)
 
