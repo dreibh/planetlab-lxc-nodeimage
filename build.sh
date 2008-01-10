@@ -64,7 +64,8 @@ pl_root_mkfedora -k -f $pkgsfile ${vref}
 
 # for distros that do not define bootstrapfs variants
 shopt -s nullglob
-for pkgs in ../build/config.${pldistro}/bootstrapfs-*.pkgs ; do
+pkgs_count=(ls ../build/config.${pldistro}/bootstrapfs-*.pkgs 2> /dev/null | wc -l)
+[ $pkgs_count -gt 0 ] && for pkgs in $(ls ../build/config.${pldistro}/bootstrapfs-*.pkgs); do
     NAME=$(basename $pkgs .pkgs | sed -e s,bootstrapfs-,,)
 
     echo "--------START BUILDING PlanetLab-Bootstrap-${NAME}: $(date)"
