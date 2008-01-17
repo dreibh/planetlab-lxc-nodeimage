@@ -98,13 +98,6 @@ pkgs_count=$(ls ../build/config.${pldistro}/bootstrapfs-*.pkgs 2> /dev/null | wc
         chroot ${vdir} /sbin/chkconfig $service off
     done
 
-    # Disable splaying of cron.
-    # At this step, vdir is base, and vref is the set of changes that end up in the nodegroup
-    echo > ${vdir}/etc/sysconfig/crontab
-
-    # Add site_admin account
-    chroot ${vdir} /usr/sbin/useradd -p "" -u 502 -m site_admin
-
     # Create a copy of the ${NAME} bootstrap filesystem w/o the base
     # bootstrap filesystem and make it smaller.  This is a three step
     # process:
@@ -142,6 +135,13 @@ done
 # Build the base Bootstrap filesystem
 # clean out yum cache to reduce space requirements
 yum -c ${vref}/etc/yum.conf --installroot=${vdir} -y clean all
+
+# Disable splaying of cron.
+echo > ${vref}/etc/sysconfig/crontab
+
+# Add site_admin account
+chroot ${vref} /usr/sbin/useradd -p "" -u 502 -m site_admin
+
 echo "--------STARTING tar'ing PlanetLab-Bootstrap.tar.bz2: $(date)"
 tar -cpjf PlanetLab-Bootstrap.tar.bz2 -C ${vref} .
 echo "--------FINISHED tar'ing PlanetLab-Bootstrap.tar.bz2: $(date)"
