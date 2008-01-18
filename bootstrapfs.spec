@@ -5,7 +5,7 @@
 
 %define name bootstrapfs
 %define version 0.1
-%define taglevel 1
+%define taglevel 2
 
 %define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
 
@@ -79,5 +79,10 @@ fi
 /var/www/html/boot/PlanetLab-Bootstrap*.tar.bz2
 
 %changelog
+* Fri Jan 18 2008 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - bootstrapfs-0.1-1 bootstrapfs-0.1-2
+- search more carefully for alternate pkgs files
+- handling of sysconfig/crontab and creation of site_admin reviewed
+- (this tag is set with module-tag.py)
+
 * Fri Sep  2 2005 Mark Huang <mlhuang@cotton.CS.Princeton.EDU> - 
 - Initial build.
