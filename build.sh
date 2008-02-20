@@ -62,6 +62,9 @@ pkgsfile=$(pl_locateDistroFile ../build/ ${pldistro} bootstrapfs.pkgs)
 # -k = exclude kernel* packages
 pl_root_mkfedora -k -f $pkgsfile ${vref} 
 
+postfile=$(pl_locateDistroFile ../build/ ${pldistro} bootstrapfs.post)
+[ "$postfile" != "not-found-by-pl_locateDistroFile" ] && /bin/bash $postfile ${vref} || :
+
 # for distros that do not define bootstrapfs variants
 shopt -s nullglob
 pkgs_count=$(ls ../build/config.${pldistro}/bootstrapfs-*.pkgs 2> /dev/null | wc -l)
@@ -93,10 +96,9 @@ pkgs_count=$(ls ../build/config.${pldistro}/bootstrapfs-*.pkgs 2> /dev/null | wc
         umount ${vdir}/proc
     fi
 
-    # Remove unneeded services
-    for service in util-vserver vprocunhide vservers-default; do
-        chroot ${vdir} /sbin/chkconfig $service off
-    done
+    postfile=$(echo $pkgs | sed -e s,pkgs,post, )
+	[ "$postfile" != "not-found-by-pl_locateDistroFile" ] && /bin/bash $postfile ${vref} || :
+
 
     # Create a copy of the ${NAME} bootstrap filesystem w/o the base
     # bootstrap filesystem and make it smaller.  This is a three step
@@ -135,12 +137,6 @@ done
 # Build the base Bootstrap filesystem
 # clean out yum cache to reduce space requirements
 yum -c ${vref}/etc/yum.conf --installroot=${vdir} -y clean all
-
-# Disable splaying of cron.
-echo > ${vref}/etc/sysconfig/crontab
-
-# Add site_admin account
-chroot ${vref} /usr/sbin/useradd -p "" -u 502 -m site_admin
 
 echo "--------STARTING tar'ing PlanetLab-Bootstrap.tar.bz2: $(date)"
 tar -cpjf PlanetLab-Bootstrap.tar.bz2 -C ${vref} .
