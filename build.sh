@@ -97,7 +97,7 @@ pkgs_count=$(ls ../build/config.${pldistro}/bootstrapfs-*.pkgs 2> /dev/null | wc
     fi
 
     postfile=$(echo $pkgs | sed -e s,pkgs,post, )
-	[ "$postfile" != "not-found-by-pl_locateDistroFile" ] && /bin/bash $postfile ${vref} || :
+	[ "$postfile" != "not-found-by-pl_locateDistroFile" ] && /bin/bash $postfile ${vdir} || :
 
 
     # Create a copy of the ${NAME} bootstrap filesystem w/o the base
