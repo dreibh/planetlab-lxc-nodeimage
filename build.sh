@@ -62,8 +62,12 @@ pkgsfile=$(pl_locateDistroFile ../build/ ${pldistro} bootstrapfs.pkgs)
 # -k = exclude kernel* packages
 pl_root_mkfedora -k -f $pkgsfile ${vref} 
 
-postfile=$(pl_locateDistroFile ../build/ ${pldistro} bootstrapfs.post)
-[ "$postfile" != "not-found-by-pl_locateDistroFile" ] && /bin/bash $postfile ${vref} || :
+# optionally invoke a post processing script after packages from
+# $pkgsfile have been installed
+pkgsdir=$(dirname $pkgsfile)
+pkgsname=$(basename $pkgsfile .pkgs)
+postfile="${pkgsdir}/${pkgsname}.post"
+[ -f $postfile ] && /bin/bash $postfile ${vref} || :
 
 # for distros that do not define bootstrapfs variants
 pkgs_count=$(ls ../build/config.${pldistro}/bootstrapfs-*.pkgs 2> /dev/null | wc -l)
@@ -95,8 +99,12 @@ pkgs_count=$(ls ../build/config.${pldistro}/bootstrapfs-*.pkgs 2> /dev/null | wc
         umount ${vdir}/proc
     fi
 
-    postfile=$(echo $pkgs | sed -e s,pkgs,post, )
-	[ "$postfile" != "not-found-by-pl_locateDistroFile" ] && /bin/bash $postfile ${vdir} || :
+    # optionally invoke a post processing script after packages from
+    # $pkgs have been installed
+    pkgsdir=$(dirname $pkgs)
+    pkgsname=$(basename $pkgs .pkgs)
+    postfile="${pkgsdir}/${pkgsname}.post"
+    [ -f $postfile ] && /bin/bash $postfile ${vdir} || :
 
 
     # Create a copy of the ${NAME} bootstrap filesystem w/o the base
