@@ -143,7 +143,7 @@ done
 
 # Build the base Bootstrap filesystem
 # clean out yum cache to reduce space requirements
-yum -c ${vref}/etc/yum.conf --installroot=${vdir} -y clean all
+yum -c ${vref}/etc/yum.conf --installroot=${vref} -y clean all
 
 echo "--------STARTING tar'ing PlanetLab-Bootstrap.tar.bz2: $(date)"
 tar -cpjf PlanetLab-Bootstrap.tar.bz2 -C ${vref} .
