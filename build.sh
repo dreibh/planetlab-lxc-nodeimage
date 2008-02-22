@@ -66,7 +66,6 @@ postfile=$(pl_locateDistroFile ../build/ ${pldistro} bootstrapfs.post)
 [ "$postfile" != "not-found-by-pl_locateDistroFile" ] && /bin/bash $postfile ${vref} || :
 
 # for distros that do not define bootstrapfs variants
-shopt -s nullglob
 pkgs_count=$(ls ../build/config.${pldistro}/bootstrapfs-*.pkgs 2> /dev/null | wc -l)
 [ $pkgs_count -gt 0 ] && for pkgs in $(ls ../build/config.${pldistro}/bootstrapfs-*.pkgs); do
     NAME=$(basename $pkgs .pkgs | sed -e s,bootstrapfs-,,)
