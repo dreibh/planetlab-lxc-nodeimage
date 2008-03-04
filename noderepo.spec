@@ -11,8 +11,8 @@
 %define nodetype %{pldistro}%{distroname}%{_arch}
 
 %define name noderepo-%{nodetype}
-%define version 4.2
-%define taglevel 1
+%define version 0.1
+%define taglevel 2
 
 %define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
 
@@ -30,7 +30,7 @@ Group: System Environment/Base
 Source0: %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
-BuildRequires: rsync createrepo
+BuildRequires: rsync 
 Requires: myplc
 
 %define debug_package %{nil}
@@ -54,7 +54,8 @@ rpms=$(echo %{node_rpms_plus} | sed -e 's,+++, ,g')
 for rpm in $rpms; do rsync %{_topdir}/$rpm $RPM_BUILD_ROOT/var/www/html/install-rpms/$repo/ ; done
 ### yumgroups
 install -D -m 644 %{_topdir}/RPMS/yumgroups.xml $RPM_BUILD_ROOT/var/www/html/install-rpms/$repo
-createrepo -g yumgroups.xml $RPM_BUILD_ROOT/var/www/html/install-rpms/$repo
+# do not do this yet, as plc.d/packages will do it anyway
+#createrepo -g yumgroups.xml $RPM_BUILD_ROOT/var/www/html/install-rpms/$repo
 
 %clean
 rm -rf $RPM_BUILD_ROOT
