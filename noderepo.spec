@@ -47,7 +47,7 @@ rm -rf $RPM_BUILD_ROOT
 
 repo=planetlab-%{distroname}-%{_arch}
 install -d -m 755 $RPM_BUILD_ROOT/var/www/html/install-rpms/$repo
-rpms=$(echo %{node_rpms_plus} | sed -e s,+++, ,g)
+rpms=$(echo %{node_rpms_plus} | sed -e 's,+++, ,g')
 for rpm in $rpms; do rsync $RPM_BUILD_ROOT/$rpm $RPM_BUILD_ROOT/var/www/html/install-rpms/$repo/ ; done
 ### yumgroups
 install -D -m 644 $RPM_BUILD_ROOT/RPMS/yumgroups.xml $RPM_BUILD_ROOT/var/www/html/install-rpms/$repo
