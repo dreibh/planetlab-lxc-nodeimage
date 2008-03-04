@@ -8,7 +8,9 @@
 # %{distrorelease}  : e.g. 8
 # %{node_rpms_plus} : as a +++ separated list of rpms from the build dir
 
-%define name noderepo-%{distroname}-%{_arch}
+%define nodetype %{pldistro}%{distroname}%{_arch}
+
+%define name noderepo-%{nodetype}
 %define version 4.2
 %define taglevel 1
 
@@ -29,6 +31,7 @@ Source0: %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
 BuildRequires: rsync createrepo
+Requires: myplc
 
 %define debug_package %{nil}
 
@@ -45,7 +48,7 @@ echo nothing to do at build time for noderepo
 %install
 rm -rf $RPM_BUILD_ROOT
 
-repo=planetlab-%{distroname}-%{_arch}
+repo=%{nodetype}
 install -d -m 755 $RPM_BUILD_ROOT/var/www/html/install-rpms/$repo
 rpms=$(echo %{node_rpms_plus} | sed -e 's,+++, ,g')
 for rpm in $rpms; do rsync $RPM_BUILD_ROOT/$rpm $RPM_BUILD_ROOT/var/www/html/install-rpms/$repo/ ; done
@@ -57,11 +60,11 @@ createrepo -g yumgroups.xml $RPM_BUILD_ROOT/var/www/html/install-rpms/$repo
 rm -rf $RPM_BUILD_ROOT
 
 %post
-
+service plc start packages
 
 %files
 %defattr(-,root,root,-)
-/var/www/html/install-rpms/planetlab-%{distroname}-%{_arch}
+/var/www/html/install-rpms/%{nodetype}
 
 %changelog
 * Tue Mar 4 2008 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> -
