@@ -45,7 +45,6 @@ echo nothing to do at build time for noderepo
 %install
 rm -rf $RPM_BUILD_ROOT
 
-pushd BootstrapFS
 repo=planetlab-%{distroname}-%{_arch}
 install -d -m 755 $RPM_BUILD_ROOT/var/www/html/install-rpms/$repo
 rpms=$(echo %{node_rpms_plus} | sed -e s,+++, ,g)
@@ -53,7 +52,6 @@ for rpm in $rpms; do rsync $RPM_BUILD_ROOT/$rpm $RPM_BUILD_ROOT/var/www/html/ins
 ### yumgroups
 install -D -m 644 $RPM_BUILD_ROOT/RPMS/yumgroups.xml $RPM_BUILD_ROOT/var/www/html/install-rpms/$repo
 createrepo -g yumgroups.xml $RPM_BUILD_ROOT/var/www/html/install-rpms/$repo
-popd
 
 %clean
 rm -rf $RPM_BUILD_ROOT
