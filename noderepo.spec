@@ -8,7 +8,7 @@
 # %{distrorelease}  : e.g. 8
 # %{node_rpms_plus} : as a +++ separated list of rpms from the build dir
 
-%define name noderepo-%{distrovsname}-%{_arch}
+%define name noderepo-%{distroname}-%{_arch}
 %define version 4.2
 %define taglevel 1
 
@@ -46,7 +46,7 @@ echo nothing to do at build time for noderepo
 rm -rf $RPM_BUILD_ROOT
 
 pushd BootstrapFS
-repo=planetlab-%{distrovsname}-%{_arch}
+repo=planetlab-%{distroname}-%{_arch}
 install -d -m 755 $RPM_BUILD_ROOT/var/www/html/install-rpms/$repo
 rpms=$(echo %{node_rpms_plus} | sed -e s,+++, ,g)
 for rpm in $rpms; do rsync $RPM_BUILD_ROOT/$rpm $RPM_BUILD_ROOT/var/www/html/install-rpms/$repo/ ; done
@@ -63,7 +63,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-/var/www/html/install-rpms/planetlab-%{distrovsname}-%{_arch}
+/var/www/html/install-rpms/planetlab-%{distroname}-%{_arch}
 
 %changelog
 * Tue Mar 4 2008 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> -
