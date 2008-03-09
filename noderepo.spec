@@ -8,7 +8,7 @@
 # %{distrorelease}  : e.g. 8
 # %{node_rpms_plus} : as a +++ separated list of rpms from the build dir
 
-%define nodetype %{pldistro}%{distroname}%{_arch}
+%define nodetype %{pldistro}-%{_arch}
 
 %define name noderepo-%{nodetype}
 %define version 0.1
@@ -29,6 +29,8 @@ License: BSD
 Group: System Environment/Base
 Source0: %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+# other archs must be able to install this
+BuildArch: noarch
 
 BuildRequires: rsync 
 Requires: myplc

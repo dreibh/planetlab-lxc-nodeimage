@@ -22,6 +22,8 @@ License: BSD
 Group: System Environment/Base
 Source0: %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+# other archs must be able to install this
+BuildArch: noarch
 
 Requires: tar, gnupg, sharutils, bzip2
 
@@ -38,21 +40,22 @@ BootManager to instantiate a node with a new filesystem.
 
 %build
 pushd BootstrapFS
-./build.sh %{pldistro}
+./build.sh %{distroname} %{pldistro} 
 popd BootstrapFS
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
 pushd BootstrapFS
+arch=$(uname -i)
 
-install -D -m 644 PlanetLab-Bootstrap.tar.bz2 \
-	$RPM_BUILD_ROOT/var/www/html/boot/PlanetLab-Bootstrap.tar.bz2
+install -D -m 644 bootstrapfs-%{pldistro}-${arch}.tar.bz2 \
+	$RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-%{pldistro}-${arch}.tar.bz2
 
 for pkgs in $(ls ../build/config.%{pldistro}/bootstrapfs-*.pkgs) ; do 
     NAME=$(basename $pkgs .pkgs | sed -e s,bootstrapfs-,,)
-    install -D -m 644 %{pldistro}-filesystems/PlanetLab-Bootstrap-${NAME}.tar.bz2 \
-		$RPM_BUILD_ROOT/var/www/html/boot/PlanetLab-Bootstrap-${NAME}.tar.bz2
+    install -D -m 644 %{pldistro}-filesystems/bootstrapfs-${NAME}-${arch}.tar.bz2 \
+		$RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-${NAME}-${arch}.tar.bz2 
 done
 
 popd
@@ -73,10 +76,9 @@ fi
 
 %post
 
-
 %files
 %defattr(-,root,root,-)
-/var/www/html/boot/PlanetLab-Bootstrap*.tar.bz2
+/var/www/html/boot/bootstrapfs*.tar.bz2
 
 %changelog
 * Fri Jan 18 2008 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - bootstrapfs-0.1-1 bootstrapfs-0.1-2

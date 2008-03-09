@@ -1,7 +1,6 @@
 #!/bin/bash
 #
-# Build PlanetLab-Bootstrap.tar.bz2, the reference image for PlanetLab
-# nodes.
+# Build bootstrapfs-*.tar.bz2, the reference image(s) for PlanetLab nodes.
 #
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Marc E. Fiuczynski <mef@cs.princeton.edu>
@@ -12,7 +11,7 @@
 
 
 #
-# This will build the Planetlab-Bootstrap.tar.bz2, which comprises
+# This will build the bootstrafs-*.tar.bz2 images, which comprises
 # the base root image on the node, then create the ${NAME} bootstrap image
 # which is made up of just the additional files needed for a ${NAME} nodegroup 
 # node.
@@ -20,14 +19,13 @@
 
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 
-# In both a normal CVS environment and a PlanetLab RPM
-# build environment, all of our dependencies are checked out into
-# directories at the same level as us.
+# in the PlanetLab build environment, our dependencies are checked out 
+# into directories at the same level as us.
 if [ -d ../build ] ; then
     PATH=$PATH:../build
     srcdir=../
 else
-    echo "Error: Could not find $(cd ../.. && pwd -P)/build/"
+    echo "Error: Could not find ../build in $(pwd)"
     exit 1
 fi
 
@@ -39,9 +37,9 @@ pl_process_fedora_options $@
 shiftcount=$?
 shift $shiftcount
 
-# pldistro expected as $1 - defaults to planetlab
-pldistro=planetlab
-[ -n "$@" ] && pldistro=$1
+# expecting fcdistro and pldistro on the command line
+fcdistro=$1; shift
+pldistro=$1; shift
 
 # Do not tolerate errors
 set -e
@@ -53,7 +51,7 @@ export PL_BOOTCD=1
 
 echo "+++++++++++++pkgsfile=$pkgsfile (and -k)"
 
-# Populate a minimal /dev and then the files for the base PlanetLab-Bootstrap content
+# Populate a minimal /dev and then the files for the base bootstrapfs content
 vref=${PWD}/base
 install -d -m 755 ${vref}
 pl_root_makedevs $vref
@@ -74,7 +72,7 @@ pkgs_count=$(ls ../build/config.${pldistro}/bootstrapfs-*.pkgs 2> /dev/null | wc
 [ $pkgs_count -gt 0 ] && for pkgs in $(ls ../build/config.${pldistro}/bootstrapfs-*.pkgs); do
     NAME=$(basename $pkgs .pkgs | sed -e s,bootstrapfs-,,)
 
-    echo "--------START BUILDING PlanetLab-Bootstrap-${NAME}: $(date)"
+    echo "--------START BUILDING bootstrapfs-${NAME}: $(date)"
 
     # "Parse" out the packages and groups for yum
     packages=$(pl_getPackages ${pl_DISTRO_NAME} $pkgs)
@@ -135,18 +133,18 @@ pkgs_count=$(ls ../build/config.${pldistro}/bootstrapfs-*.pkgs 2> /dev/null | wc
     rm -f  ${vdir}.changes
     mv ${vdir}-tmp ${vdir}
     
-    echo "--------STARTING tar'ing PlanetLab-Bootstrap-${NAME}.tar.bz2: $(date)"
-    tar -cpjf ${pldistro}-filesystems/PlanetLab-Bootstrap-${NAME}.tar.bz2 -C ${vdir} .
-    echo "--------FINISHED tar'ing PlanetLab-Bootstrap-${NAME}.tar.bz2: $(date)"
-    echo "--------DONE BUILDING PlanetLab-Bootstrap-${NAME}: $(date)"
+    echo "--------STARTING tar'ing bootstrapfs-${NAME}-${pl_DISTRO_ARCH}.tar.bz2: $(date)"
+    tar -cpjf ${pldistro}-filesystems/bootstrapfs-${NAME}-${pl_DISTRO_ARCH}.tar.bz2 -C ${vdir} .
+    echo "--------FINISHED tar'ing bootstrapfs-${NAME}-${pl_DISTRO_ARCH}.tar.bz2: $(date)"
+    echo "--------DONE BUILDING bootstrapfs-${NAME}-${pl_DISTRO_ARCH}: $(date)"
 done
 
 # Build the base Bootstrap filesystem
 # clean out yum cache to reduce space requirements
 yum -c ${vref}/etc/yum.conf --installroot=${vref} -y clean all
 
-echo "--------STARTING tar'ing PlanetLab-Bootstrap.tar.bz2: $(date)"
-tar -cpjf PlanetLab-Bootstrap.tar.bz2 -C ${vref} .
-echo "--------FINISHED tar'ing PlanetLab-Bootstrap.tar.bz2: $(date)"
+echo "--------STARTING tar'ing bootstrapfs-${pldistro}-${pl_DISTRO_ARCH}.tar.bz2: $(date)"
+tar -cpjf bootstrapfs-${pldistro}-${pl_DISTRO_ARCH}.tar.bz2 -C ${vref} .
+echo "--------FINISHED tar'ing bootstrapfs-${pldistro}-${pl_DISTRO_ARCH}.tar.bz2: $(date)"
 
 exit 0
