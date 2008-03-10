@@ -38,8 +38,8 @@ shiftcount=$?
 shift $shiftcount
 
 # expecting fcdistro and pldistro on the command line
-fcdistro=$1; shift
 pldistro=$1; shift
+fcdistro=${pl_DISTRO_NAME}
 
 # Do not tolerate errors
 set -e
@@ -58,7 +58,7 @@ pl_root_makedevs $vref
 
 pkgsfile=$(pl_locateDistroFile ../build/ ${pldistro} bootstrapfs.pkgs)
 # -k = exclude kernel* packages
-pl_root_mkfedora -k -f $pkgsfile ${vref} 
+pl_root_mkfedora ${vref} ${pldistro} $pkgsfile
 
 # optionally invoke a post processing script after packages from
 # $pkgsfile have been installed
@@ -75,8 +75,8 @@ pkgs_count=$(ls ../build/config.${pldistro}/bootstrapfs-*.pkgs 2> /dev/null | wc
     echo "--------START BUILDING bootstrapfs-${NAME}: $(date)"
 
     # "Parse" out the packages and groups for yum
-    packages=$(pl_getPackages ${pl_DISTRO_NAME} $pkgs)
-    groups=$(pl_getGroups ${pl_DISTRO_NAME} $pkgs)
+    packages=$(pl_getPackages $fcdistro $pldistro $pkgs)
+    groups=$(pl_getGroups $fcdistro $pldistro $pkgs)
     echo "${NAME} has the following packages : ${packages}"
     echo "${NAME} has the following groups : ${groups}"
 

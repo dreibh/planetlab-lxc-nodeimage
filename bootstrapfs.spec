@@ -40,7 +40,7 @@ BootManager to instantiate a node with a new filesystem.
 
 %build
 pushd BootstrapFS
-./build.sh %{distroname} %{pldistro} 
+./build.sh %{pldistro} 
 popd BootstrapFS
 
 %install

@@ -8,9 +8,9 @@
 # %{distrorelease}  : e.g. 8
 # %{node_rpms_plus} : as a +++ separated list of rpms from the build dir
 
-%define nodetype %{pldistro}-%{_arch}
+%define nodefamily %{pldistro}-%{_arch}
 
-%define name noderepo-%{nodetype}
+%define name noderepo-%{nodefamily}
 %define version 0.1
 %define taglevel 2
 
@@ -50,7 +50,7 @@ echo nothing to do at build time for noderepo
 %install
 rm -rf $RPM_BUILD_ROOT
 
-repo=%{nodetype}
+repo=%{nodefamily}
 install -d -m 755 $RPM_BUILD_ROOT/var/www/html/install-rpms/$repo
 rpms=$(echo %{node_rpms_plus} | sed -e 's,+++, ,g')
 for rpm in $rpms; do rsync %{_topdir}/$rpm $RPM_BUILD_ROOT/var/www/html/install-rpms/$repo/ ; done
@@ -67,7 +67,7 @@ service plc start packages
 
 %files
 %defattr(-,root,root,-)
-/var/www/html/install-rpms/%{nodetype}
+/var/www/html/install-rpms/%{nodefamily}
 
 %changelog
 * Tue Mar 4 2008 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> -
