@@ -3,7 +3,9 @@
 #
 %define url $URL$
 
-%define name bootstrapfs
+%define nodefamily %{pldistro}-%{_arch}
+
+%define name bootstrapfs-%{nodefamily}
 %define version 0.1
 %define taglevel 2
 
