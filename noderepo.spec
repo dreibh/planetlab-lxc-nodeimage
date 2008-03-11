@@ -55,7 +55,7 @@ install -d -m 755 $RPM_BUILD_ROOT/var/www/html/install-rpms/$repo
 rpms=$(echo %{node_rpms_plus} | sed -e 's,+++, ,g')
 for rpm in $rpms; do rsync %{_topdir}/$rpm $RPM_BUILD_ROOT/var/www/html/install-rpms/$repo/ ; done
 ### yumgroups
-install -D -m 644 %{_topdir}/RPMS/yumgroups.xml $RPM_BUILD_ROOT/var/www/html/install-rpms/$repo
+install -D -m 644 %{_topdir}/RPMS/yumgroups.xml $RPM_BUILD_ROOT/var/www/html/install-rpms/$repo/yumgroups.xml
 # do not do this yet, as plc.d/packages will do it anyway
 #createrepo -g yumgroups.xml $RPM_BUILD_ROOT/var/www/html/install-rpms/$repo
 
