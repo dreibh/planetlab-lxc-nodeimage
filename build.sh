@@ -49,14 +49,13 @@ set -e
 # would like to pretend that we are.
 export PL_BOOTCD=1
 
-echo "+++++++++++++pkgsfile=$pkgsfile (and -k)"
-
 # Populate a minimal /dev and then the files for the base bootstrapfs content
 vref=${PWD}/base
 install -d -m 755 ${vref}
 pl_root_makedevs $vref
 
 pkgsfile=$(pl_locateDistroFile ../build/ ${pldistro} bootstrapfs.pkgs)
+echo "--------START BUILDING PlanetLab-Bootstrap: $(date)"
 # -k = exclude kernel* packages
 pl_root_mkfedora ${vref} ${pldistro} $pkgsfile
 
@@ -67,12 +66,19 @@ pkgsname=$(basename $pkgsfile .pkgs)
 postfile="${pkgsdir}/${pkgsname}.post"
 [ -f $postfile ] && /bin/bash $postfile ${vref} || :
 
+once=1
+
 # for distros that do not define bootstrapfs variants
 pkgs_count=$(ls ../build/config.${pldistro}/bootstrapfs-*.pkgs 2> /dev/null | wc -l)
 [ $pkgs_count -gt 0 ] && for pkgs in $(ls ../build/config.${pldistro}/bootstrapfs-*.pkgs); do
     NAME=$(basename $pkgs .pkgs | sed -e s,bootstrapfs-,,)
 
-    echo "--------START BUILDING bootstrapfs-${NAME}: $(date)"
+    if [ $once -eq 1 ] ; then
+	once=0
+	echo "--------CREATING PlanetLab-Bootstrap SUBPACKAGES"
+    fi
+
+    echo "--------START BUILDING PlanetLab-Bootstrap-${NAME}: $(date)"
 
     # "Parse" out the packages and groups for yum
     packages=$(pl_getPackages $fcdistro $pldistro $pkgs)
@@ -146,5 +152,6 @@ yum -c ${vref}/etc/yum.conf --installroot=${vref} -y clean all
 echo "--------STARTING tar'ing bootstrapfs-${pldistro}-${pl_DISTRO_ARCH}.tar.bz2: $(date)"
 tar -cpjf bootstrapfs-${pldistro}-${pl_DISTRO_ARCH}.tar.bz2 -C ${vref} .
 echo "--------FINISHED tar'ing bootstrapfs-${pldistro}-${pl_DISTRO_ARCH}.tar.bz2: $(date)"
+echo "--------DONE BUILDING PlanetLab-Bootstrap: $(date)"
 
 exit 0
