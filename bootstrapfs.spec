@@ -9,14 +9,16 @@
 %define version 0.1
 %define taglevel 2
 
-%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
+# pldistro already in the rpm name
+#%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
+%define release %{taglevel}%{?date:.%{date}}
 
 Vendor: PlanetLab
 Packager: PlanetLab Central <support@planet-lab.org>
 Distribution: PlanetLab %{plrelease}
 URL: %(echo %{url} | cut -d ' ' -f 2)
 
-Summary: The PlanetLab Bootstrap Filesystems
+Summary: The PlanetLab Bootstrap Filesystems for %{nodefamily}
 Name: %{name}
 Version: %{version}
 Release: %{release}
