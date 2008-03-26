@@ -11,8 +11,8 @@
 %define nodefamily %{pldistro}-%{_arch}
 
 %define name noderepo-%{nodefamily}
-%define version 0.1
-%define taglevel 2
+%define version 1.0
+%define taglevel 0
 
 %define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
 
@@ -70,5 +70,9 @@ service plc start packages
 /var/www/html/install-rpms/%{nodefamily}
 
 %changelog
+* Wed Mar 26 2008 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - BootstrapFS-0.1-2 BootstrapFS-1.0-0
+- naming scheme changed, tarball name now contains ''nodefamily'' as <pldistro>-<arch>
+- new package named 'noderepo' allows to ship the full set of node rpms to another (arch) myplc
+
 * Tue Mar 4 2008 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> -
 - Initial build.
