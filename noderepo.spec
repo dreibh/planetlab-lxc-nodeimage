@@ -14,7 +14,9 @@
 %define version 1.0
 %define taglevel 0
 
-%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
+# pldistro already in the rpm name
+#%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
+%define release %{taglevel}%{?date:.%{date}}
 
 Vendor: PlanetLab
 Packager: PlanetLab Central <support@planet-lab.org>
