@@ -7,7 +7,7 @@
 
 %define name bootstrapfs-%{nodefamily}
 %define version 1.0
-%define taglevel 0
+%define taglevel 1
 
 # pldistro already in the rpm name
 #%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
@@ -85,6 +85,9 @@ fi
 /var/www/html/boot/bootstrapfs*.tar.bz2
 
 %changelog
+* Mon May 05 2008 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - BootstrapFS-1.0-1
+- rpm release tag does not need pldistro as it is already part of the rpm name
+
 * Wed Mar 26 2008 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - BootstrapFS-0.1-2 BootstrapFS-1.0-0
 - naming scheme changed, tarball name now contains ''nodefamily'' as <pldistro>-<arch>
 - new package named 'noderepo' allows to ship the full set of node rpms to another (arch) myplc
