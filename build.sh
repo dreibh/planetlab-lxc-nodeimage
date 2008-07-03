@@ -95,8 +95,8 @@ pkgs_count=$(ls ../build/config.${pldistro}/bootstrapfs-*.pkgs 2> /dev/null | wc
     rm -f ${vdir}/var/lib/rpm/__db*
 
     # Install the system vserver specific packages
-    [ -n "$packages" ] && yum -c ${vdir}/etc/yum.conf --installroot=${vdir} -y install $packages
-    [ -n "$groups" ] && yum -c ${vdir}/etc/yum.conf --installroot=${vdir} -y groupinstall $groups
+    [ -n "$packages" ] && yum -c ${vdir}/etc/mkfedora-yum.conf --installroot=${vdir} -y install $packages
+    [ -n "$groups" ] && yum -c ${vdir}/etc/mkfedora-yum.conf --installroot=${vdir} -y groupinstall $groups
 
     if [ -f "${vdir}/proc/cpuinfo" ] ; then
         echo "WARNING: some RPM appears to have mounted /proc in ${NAME}. Unmounting it!"
@@ -116,7 +116,7 @@ pkgs_count=$(ls ../build/config.${pldistro}/bootstrapfs-*.pkgs 2> /dev/null | wc
     # process:
 
     # step 1: clean out yum cache to reduce space requirements
-    yum -c ${vdir}/etc/yum.conf --installroot=${vdir} -y clean all
+    yum -c ${vdir}/etc/mkfedora-yum.conf --installroot=${vdir} -y clean all
 
     # step 2: figure out the new/changed files in ${vdir} vs. ${vref} and compute ${vdir}.changes
     rsync -anv ${vdir}/ ${vref}/ > ${vdir}.changes
@@ -147,7 +147,7 @@ done
 
 # Build the base Bootstrap filesystem
 # clean out yum cache to reduce space requirements
-yum -c ${vref}/etc/yum.conf --installroot=${vref} -y clean all
+yum -c ${vref}/etc/mkfedora-yum.conf --installroot=${vref} -y clean all
 
 echo "--------STARTING tar'ing bootstrapfs-${pldistro}-${pl_DISTRO_ARCH}.tar.bz2: $(date)"
 tar -cpjf bootstrapfs-${pldistro}-${pl_DISTRO_ARCH}.tar.bz2 -C ${vref} .
