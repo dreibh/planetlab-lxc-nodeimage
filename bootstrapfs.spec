@@ -7,7 +7,7 @@
 
 %define name bootstrapfs-%{nodefamily}
 %define version 1.0
-%define taglevel 1
+%define taglevel 2
 
 # pldistro already in the rpm name
 #%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
@@ -85,6 +85,9 @@ fi
 /var/www/html/boot/bootstrapfs*.tar.bz2
 
 %changelog
+* Thu Jul 03 2008 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - BootstrapFS-1.0-2
+- uses the right yum.conf when building images
+
 * Mon May 05 2008 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - BootstrapFS-1.0-1
 - rpm release tag does not need pldistro as it is already part of the rpm name
 
