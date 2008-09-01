@@ -70,6 +70,8 @@ service plc start packages
 %files
 %defattr(-,root,root,-)
 /var/www/html/install-rpms/%{nodefamily}
+# don't overwrite yumgroups.xml if exists
+%config(noreplace) /var/www/html/install-rpms/%{nodefamily}/yumgroups.xml
 
 %changelog
 * Thu Jul 03 2008 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - BootstrapFS-1.0-2
