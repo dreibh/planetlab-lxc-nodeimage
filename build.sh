@@ -9,7 +9,6 @@
 # $Id: buildnode.sh,v 1.12.6.1 2007/08/30 20:09:20 mef Exp $
 #
 
-
 #
 # This will build the bootstrafs-*.tar.bz2 images, which comprises
 # the base root image on the node, then create the ${NAME} bootstrap image
@@ -55,7 +54,7 @@ install -d -m 755 ${vref}
 pl_root_makedevs $vref
 
 pkgsfile=$(pl_locateDistroFile ../build/ ${pldistro} bootstrapfs.pkgs)
-echo "--------START BUILDING PlanetLab-Bootstrap: $(date)"
+echo "* Building Bootstrapfs for ${pldistro}: $(date)"
 # -k = exclude kernel* packages
 pl_root_mkfedora ${vref} ${pldistro} $pkgsfile
 
@@ -66,19 +65,19 @@ pkgsname=$(basename $pkgsfile .pkgs)
 postfile="${pkgsdir}/${pkgsname}.post"
 [ -f $postfile ] && /bin/bash $postfile ${vref} || :
 
-once=1
+displayed=""
 
 # for distros that do not define bootstrapfs variants
 pkgs_count=$(ls ../build/config.${pldistro}/bootstrapfs-*.pkgs 2> /dev/null | wc -l)
 [ $pkgs_count -gt 0 ] && for pkgs in $(ls ../build/config.${pldistro}/bootstrapfs-*.pkgs); do
     NAME=$(basename $pkgs .pkgs | sed -e s,bootstrapfs-,,)
 
-    if [ $once -eq 1 ] ; then
-	once=0
-	echo "--------CREATING PlanetLab-Bootstrap SUBPACKAGES"
-    fi
+    [ -z "$displayed" ] && echo "* Handling ${plistro} bootstrapfs extensions"
+    displayed=true
 
-    echo "--------START BUILDING PlanetLab-Bootstrap-${NAME}: $(date)"
+    extension_name=bootstrapfs-${NAME}-${pl_DISTRO_ARCH}.tar.bz2
+
+    echo "* Start Building $extension_name: $(date)"
 
     # "Parse" out the packages and groups for yum
     packages=$(pl_getPackages $fcdistro $pldistro $pkgs)
@@ -139,19 +138,18 @@ pkgs_count=$(ls ../build/config.${pldistro}/bootstrapfs-*.pkgs 2> /dev/null | wc
     rm -f  ${vdir}.changes
     mv ${vdir}-tmp ${vdir}
     
-    echo "--------STARTING tar'ing bootstrapfs-${NAME}-${pl_DISTRO_ARCH}.tar.bz2: $(date)"
-    tar -cpjf ${pldistro}-filesystems/bootstrapfs-${NAME}-${pl_DISTRO_ARCH}.tar.bz2 -C ${vdir} .
-    echo "--------FINISHED tar'ing bootstrapfs-${NAME}-${pl_DISTRO_ARCH}.tar.bz2: $(date)"
-    echo "--------DONE BUILDING bootstrapfs-${NAME}-${pl_DISTRO_ARCH}: $(date)"
+    echo -n "* tar $extension_name s=$(date +%H-%M-%S)"
+    tar -cpjf ${pldistro}-filesystems/$extension_name -C ${vdir} .
+    echo " e=$(date +%H-%M-%S) "
 done
 
 # Build the base Bootstrap filesystem
 # clean out yum cache to reduce space requirements
 yum -c ${vref}/etc/mkfedora-yum.conf --installroot=${vref} -y clean all
 
-echo "--------STARTING tar'ing bootstrapfs-${pldistro}-${pl_DISTRO_ARCH}.tar.bz2: $(date)"
-tar -cpjf bootstrapfs-${pldistro}-${pl_DISTRO_ARCH}.tar.bz2 -C ${vref} .
-echo "--------FINISHED tar'ing bootstrapfs-${pldistro}-${pl_DISTRO_ARCH}.tar.bz2: $(date)"
-echo "--------DONE BUILDING PlanetLab-Bootstrap: $(date)"
+bootstrapfs_name=bootstrapfs-${pldistro}-${pl_DISTRO_ARCH}.tar.bz2
+echo -n "* tar $bootstrapfs_name s=$(date +%H-%M-%S)"
+tar -cpjf $bootstrapfs_name -C ${vref} .
+echo " e=$(date +%H-%M-%S) "
 
 exit 0
