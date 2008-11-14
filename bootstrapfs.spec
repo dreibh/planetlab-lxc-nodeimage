@@ -7,7 +7,7 @@
 
 %define name bootstrapfs-%{nodefamily}
 %define version 1.0
-%define taglevel 3
+%define taglevel 4
 
 # pldistro already in the rpm name
 #%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
@@ -85,6 +85,9 @@ fi
 /var/www/html/boot/bootstrapfs*.tar.bz2
 
 %changelog
+* Fri Nov 14 2008 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - BootstrapFS-1.0-4
+- cosmetic changes in build: displays duration, and shows up in summary
+
 * Mon Sep 01 2008 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - BootstrapFS-1.0-3
 - Do not overwrite yumgroups.xml upon updates of noderepo
 
