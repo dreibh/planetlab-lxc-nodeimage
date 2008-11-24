@@ -75,6 +75,7 @@ pkgs_count=$(ls ../build/config.${pldistro}/bootstrapfs-*.pkgs 2> /dev/null | wc
     [ -z "$displayed" ] && echo "* Handling ${plistro} bootstrapfs extensions"
     displayed=true
 
+    extension_plain=bootstrapfs-${NAME}-${pl_DISTRO_ARCH}.tar
     extension_name=bootstrapfs-${NAME}-${pl_DISTRO_ARCH}.tar.bz2
 
     echo "* Start Building $extension_name: $(date)"
@@ -139,7 +140,9 @@ pkgs_count=$(ls ../build/config.${pldistro}/bootstrapfs-*.pkgs 2> /dev/null | wc
     mv ${vdir}-tmp ${vdir}
     
     echo -n "* tar $extension_name s=$(date +%H-%M-%S)"
-    tar -cpjf ${pldistro}-filesystems/$extension_name -C ${vdir} .
+    tar -cpf ${pldistro}-filesystems/$extension_plain -C ${vdir} .
+    echo -n " m=$(date +%H-%M-%S) "
+    bzip2 --compress --stdout $extension_plain > $extension_name
     echo " e=$(date +%H-%M-%S) "
 done
 
@@ -147,9 +150,12 @@ done
 # clean out yum cache to reduce space requirements
 yum -c ${vref}/etc/mkfedora-yum.conf --installroot=${vref} -y clean all
 
+bootstrapfs_plain=bootstrapfs-${pldistro}-${pl_DISTRO_ARCH}.tar
 bootstrapfs_name=bootstrapfs-${pldistro}-${pl_DISTRO_ARCH}.tar.bz2
 echo -n "* tar $bootstrapfs_name s=$(date +%H-%M-%S)"
-tar -cpjf $bootstrapfs_name -C ${vref} .
+tar -cpf $bootstrapfs_plain -C ${vref} .
+echo -n " m=$(date +%H-%M-%S) "
+bzip2 --compress --stdout $bootstrapfs_plain > $bootstrapfs_name
 echo " e=$(date +%H-%M-%S) "
 
 exit 0

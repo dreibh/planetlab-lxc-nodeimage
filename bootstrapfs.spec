@@ -39,6 +39,12 @@ AutoReqProv: no
 The PlanetLab Bootstrap Filesystem(s) are downloaded by the
 BootManager to instantiate a node with a new filesystem.
 
+%package plain
+Summary: The (uncompressed) PlanetLab Bootstrap Filesystems for %{nodefamily}
+Group: System Environment/Base
+%description plain
+This package provides the same functions as %{name} but with uncompressed tarball for faster tests.
+
 %prep
 %setup -q
 
@@ -55,11 +61,15 @@ arch=$(uname -i)
 
 install -D -m 644 bootstrapfs-%{pldistro}-${arch}.tar.bz2 \
 	$RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-%{pldistro}-${arch}.tar.bz2
+install -D -m 644 bootstrapfs-%{pldistro}-${arch}.tar \
+	$RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-%{pldistro}-${arch}.tar
 
 for pkgs in $(ls ../build/config.%{pldistro}/bootstrapfs-*.pkgs) ; do 
     NAME=$(basename $pkgs .pkgs | sed -e s,bootstrapfs-,,)
     install -D -m 644 %{pldistro}-filesystems/bootstrapfs-${NAME}-${arch}.tar.bz2 \
 		$RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-${NAME}-${arch}.tar.bz2 
+    install -D -m 644 %{pldistro}-filesystems/bootstrapfs-${NAME}-${arch}.tar \
+		$RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-${NAME}-${arch}.tar 
 done
 
 popd
@@ -83,6 +93,10 @@ fi
 %files
 %defattr(-,root,root,-)
 /var/www/html/boot/bootstrapfs*.tar.bz2
+
+%files plain
+%defattr(-,root,root,-)
+/var/www/html/boot/bootstrapfs*.tar
 
 %changelog
 * Fri Nov 14 2008 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - BootstrapFS-1.0-4
