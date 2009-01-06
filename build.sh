@@ -142,7 +142,7 @@ pkgs_count=$(ls ../build/config.${pldistro}/bootstrapfs-*.pkgs 2> /dev/null | wc
     echo -n "* tar $extension_name s=$(date +%H-%M-%S)"
     tar -cpf ${pldistro}-filesystems/$extension_plain -C ${vdir} .
     echo -n " m=$(date +%H-%M-%S) "
-    bzip2 --compress --stdout $extension_plain > $extension_name
+    bzip2 --compress --stdout ${pldistro}-filesystems/$extension_plain > ${pldistro}-filesystems/$extension_name
     echo " e=$(date +%H-%M-%S) "
 done
 
