@@ -7,7 +7,7 @@
 
 %define name bootstrapfs-%{nodefamily}
 %define version 1.0
-%define taglevel 5
+%define taglevel 6
 
 # pldistro already in the rpm name
 #%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
@@ -99,6 +99,9 @@ fi
 /var/www/html/boot/bootstrapfs*.tar
 
 %changelog
+* Thu Jan 08 2009 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - BootstrapFS-1.0-6
+- fix build bug when dealing with extensions
+
 * Thu Dec 04 2008 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - BootstrapFS-1.0-5
 - optional package bootstrapfs-<pldiftr>-<arch>-plain comes with uncompressed images for faster tests
 
