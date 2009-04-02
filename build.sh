@@ -63,7 +63,7 @@ pl_root_mkfedora ${vref} ${pldistro} $pkgsfile
 pkgsdir=$(dirname $pkgsfile)
 pkgsname=$(basename $pkgsfile .pkgs)
 postfile="${pkgsdir}/${pkgsname}.post"
-[ -f $postfile ] && /bin/bash $postfile ${vref} || :
+[ -f $postfile ] && { echo "Running post install file $postfile" ; /bin/bash $postfile ${vref} || : ; }
 
 displayed=""
 
