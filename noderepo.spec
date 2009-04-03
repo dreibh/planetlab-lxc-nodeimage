@@ -1,5 +1,5 @@
 #
-# $Id: bootstrapfs.spec 7668 2008-01-08 11:49:43Z thierry $
+# $Id$
 #
 %define url $URL: svn+ssh://thierry@svn.planet-lab.org/svn/BootstrapFS/trunk/bootstrapfs.spec $
 
