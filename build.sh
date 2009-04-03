@@ -60,9 +60,7 @@ pl_root_mkfedora ${vref} ${pldistro} $pkgsfile
 
 # optionally invoke a post processing script after packages from
 # $pkgsfile have been installed
-pkgsdir=$(dirname $pkgsfile)
-pkgsname=$(basename $pkgsfile .pkgs)
-postfile="${pkgsdir}/${pkgsname}.post"
+postfile=$(pl_locateDistroFile ../build/ ${pldistro} bootstrapfs.post)
 [ -f $postfile ] && { echo "Running post install file $postfile" ; /bin/bash $postfile ${vref} || : ; }
 
 displayed=""
@@ -105,11 +103,8 @@ pkgs_count=$(ls ../build/config.${pldistro}/bootstrapfs-*.pkgs 2> /dev/null | wc
 
     # optionally invoke a post processing script after packages from
     # $pkgs have been installed
-    pkgsdir=$(dirname $pkgs)
-    pkgsname=$(basename $pkgs .pkgs)
-    postfile="${pkgsdir}/${pkgsname}.post"
-    [ -f $postfile ] && /bin/bash $postfile ${vdir} || :
-
+    postfile=$(pl_locateDistroFile ../build/ ${pldistro} bootstrapfs-${NAME}.post)
+    [ -f $postfile ] && { echo "Running post install file $postfile" ; /bin/bash $postfile ${vdir} || : ; }
 
     # Create a copy of the ${NAME} bootstrap filesystem w/o the base
     # bootstrap filesystem and make it smaller.  This is a three step
