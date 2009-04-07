@@ -12,7 +12,7 @@
 
 %define name noderepo-%{nodefamily}
 %define version 1.0
-%define taglevel 6
+%define taglevel 7
 
 # pldistro already in the rpm name
 #%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
@@ -74,6 +74,10 @@ service plc start packages
 %config(noreplace) /var/www/html/install-rpms/%{nodefamily}/yumgroups.xml
 
 %changelog
+* Tue Apr 07 2009 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - BootstrapFS-1.0-7
+- search post-install scripts (.post) in path (distro, then planetlab)
+- mostly useful for externally-defined pldistros
+
 * Thu Jan 08 2009 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - BootstrapFS-1.0-6
 - fix build bug when dealing with extensions
 
