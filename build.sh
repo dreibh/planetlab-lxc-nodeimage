@@ -60,7 +60,7 @@ pl_root_mkfedora ${vref} ${pldistro} $pkgsfile
 
 # optionally invoke a post processing script after packages from
 # $pkgsfile have been installed
-postfile=$(pl_locateDistroFile ../build/ ${pldistro} bootstrapfs.post)
+postfile=$(pl_locateDistroFile ../build/ ${pldistro} bootstrapfs.post || : )
 [ -f $postfile ] && { echo "Running post install file $postfile" ; /bin/bash $postfile ${vref} || : ; }
 
 displayed=""
@@ -103,7 +103,7 @@ pkgs_count=$(ls ../build/config.${pldistro}/bootstrapfs-*.pkgs 2> /dev/null | wc
 
     # optionally invoke a post processing script after packages from
     # $pkgs have been installed
-    postfile=$(pl_locateDistroFile ../build/ ${pldistro} bootstrapfs-${NAME}.post)
+    postfile=$(pl_locateDistroFile ../build/ ${pldistro} bootstrapfs-${NAME}.post || : )
     [ -f $postfile ] && { echo "Running post install file $postfile" ; /bin/bash $postfile ${vdir} || : ; }
 
     # Create a copy of the ${NAME} bootstrap filesystem w/o the base
