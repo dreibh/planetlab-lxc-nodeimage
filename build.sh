@@ -94,7 +94,11 @@ pkgs_count=$(ls ../build/config.${pldistro}/bootstrapfs-*.pkgs 2> /dev/null | wc
 
     # Install the system vserver specific packages
     [ -n "$packages" ] && yum -c ${vdir}/etc/mkfedora-yum.conf --installroot=${vdir} -y install $packages
-    [ -n "$groups" ] && yum -c ${vdir}/etc/mkfedora-yum.conf --installroot=${vdir} -y groupinstall $groups
+    for group_plus in $groups; do
+	group=$(echo $group_plus | sed -e "s,+++, ,g")
+        yum -c ${vdir}/etc/mkfedora-yum.conf --installroot=${vdir} -y groupinstall "$group"
+    done
+
 
     if [ -f "${vdir}/proc/cpuinfo" ] ; then
         echo "WARNING: some RPM appears to have mounted /proc in ${NAME}. Unmounting it!"
