@@ -12,7 +12,7 @@
 
 %define name noderepo-%{nodefamily}
 %define version 1.0
-%define taglevel 8
+%define taglevel 9
 
 # pldistro already in the rpm name
 #%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
@@ -74,6 +74,9 @@ service plc start packages
 %config(noreplace) /var/www/html/install-rpms/%{nodefamily}/yumgroups.xml
 
 %changelog
+* Fri Oct 09 2009 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - BootstrapFS-1.0-9
+- can use groups in the pkgs file with +++ for space
+
 * Tue Apr 07 2009 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - BootstrapFS-1.0-8
 - bugfix for when a .post script is not needed
 
