@@ -70,7 +70,7 @@ pkgs_count=$(ls ../build/config.${pldistro}/bootstrapfs-*.pkgs 2> /dev/null | wc
 [ $pkgs_count -gt 0 ] && for pkgs in $(ls ../build/config.${pldistro}/bootstrapfs-*.pkgs); do
     NAME=$(basename $pkgs .pkgs | sed -e s,bootstrapfs-,,)
 
-    [ -z "$displayed" ] && echo "* Handling ${plistro} bootstrapfs extensions"
+    [ -z "$displayed" ] && echo "* Handling ${pldistro} bootstrapfs extensions"
     displayed=true
 
     extension_plain=bootstrapfs-${NAME}-${pl_DISTRO_ARCH}.tar
