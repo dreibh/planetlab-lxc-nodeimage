@@ -7,7 +7,7 @@
 
 %define name bootstrapfs-%{nodefamily}
 %define version 1.0
-%define taglevel 10
+%define taglevel 11
 
 # pldistro already in the rpm name
 #%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
@@ -99,6 +99,9 @@ fi
 /var/www/html/boot/bootstrapfs*.tar
 
 %changelog
+* Mon Jan 04 2010 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - BootstrapFS-1.0-11
+- for building on fedora12
+
 * Thu Oct 22 2009 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - BootstrapFS-1.0-10
 - cosmetic change in message at build-time
 
