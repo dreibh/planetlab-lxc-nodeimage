@@ -8,7 +8,7 @@
 # %{distrorelease}  : e.g. 8
 # %{node_rpms_plus} : as a +++ separated list of rpms from the build dir
 
-%define nodefamily %{pldistro}-%{_arch}
+%define nodefamily %{pldistro}-%{distroname}-%{_arch}
 
 %define name noderepo-%{nodefamily}
 %define version 1.0
