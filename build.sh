@@ -15,6 +15,7 @@
 # which is made up of just the additional files needed for a ${NAME} nodegroup 
 # node.
 #
+# It is expected to be in sync with the getNodeFlavour PLCAPI method
 
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 
@@ -39,6 +40,9 @@ shift $shiftcount
 # expecting fcdistro and pldistro on the command line
 pldistro=$1; shift
 fcdistro=${pl_DISTRO_NAME}
+arch=${pl_DISTRO_ARCH}
+nodefamily=${pldistro}-${fcdistro}-${arch}
+extensionfamily=${fcdistro}-${arch}
 
 # Do not tolerate errors
 set -e
@@ -73,8 +77,8 @@ pkgs_count=$(ls ../build/config.${pldistro}/bootstrapfs-*.pkgs 2> /dev/null | wc
     [ -z "$displayed" ] && echo "* Handling ${pldistro} bootstrapfs extensions"
     displayed=true
 
-    extension_plain=bootstrapfs-${NAME}-${pl_DISTRO_ARCH}.tar
-    extension_name=bootstrapfs-${NAME}-${pl_DISTRO_ARCH}.tar.bz2
+    extension_plain=bootstrapfs-${NAME}-${extensionfamily}.tar
+    extension_name=bootstrapfs-${NAME}-${extensionfamily}.tar.bz2
 
     echo "* Start Building $extension_name: $(date)"
 
@@ -149,8 +153,8 @@ done
 # clean out yum cache to reduce space requirements
 yum -c ${vref}/etc/mkfedora-yum.conf --installroot=${vref} -y clean all
 
-bootstrapfs_plain=bootstrapfs-${pldistro}-${pl_DISTRO_ARCH}.tar
-bootstrapfs_name=bootstrapfs-${pldistro}-${pl_DISTRO_ARCH}.tar.bz2
+bootstrapfs_plain=bootstrapfs-${nodefamily}.tar
+bootstrapfs_name=bootstrapfs-${nodefamily}.tar.bz2
 echo -n "* tar $bootstrapfs_name s=$(date +%H-%M-%S)"
 tar -cpf $bootstrapfs_plain -C ${vref} .
 echo -n " m=$(date +%H-%M-%S) "
