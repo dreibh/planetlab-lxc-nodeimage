@@ -4,6 +4,7 @@
 %define url $URL$
 
 %define nodefamily %{pldistro}-%{distroname}-%{_arch}
+%define extensionfamily %{distroname}-%{_arch}
 
 %define name bootstrapfs-%{nodefamily}
 %define version 2.0
@@ -57,38 +58,25 @@ popd BootstrapFS
 rm -rf $RPM_BUILD_ROOT
 
 pushd BootstrapFS
-arch=$(uname -i)
+#arch=$(uname -i)
 
-install -D -m 644 bootstrapfs-%{pldistro}-${arch}.tar.bz2 \
-	$RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-%{pldistro}-${arch}.tar.bz2
-install -D -m 644 bootstrapfs-%{pldistro}-${arch}.tar \
-	$RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-%{pldistro}-${arch}.tar
+install -D -m 644 bootstrapfs-%{nodefamily}.tar.bz2 \
+	$RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-%{nodefamily}.tar.bz2
+install -D -m 644 bootstrapfs-%{nodefamily}.tar \
+	$RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-%{nodefamily}.tar
 
 for pkgs in $(ls ../build/config.%{pldistro}/bootstrapfs-*.pkgs) ; do 
     NAME=$(basename $pkgs .pkgs | sed -e s,bootstrapfs-,,)
-    install -D -m 644 %{pldistro}-filesystems/bootstrapfs-${NAME}-${arch}.tar.bz2 \
-		$RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-${NAME}-${arch}.tar.bz2 
-    install -D -m 644 %{pldistro}-filesystems/bootstrapfs-${NAME}-${arch}.tar \
-		$RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-${NAME}-${arch}.tar 
+    install -D -m 644 %{pldistro}-filesystems/bootstrapfs-${NAME}-%{extensionfamily}.tar.bz2 \
+		$RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-${NAME}-%{extensionfamily}.tar.bz2 
+    install -D -m 644 %{pldistro}-filesystems/bootstrapfs-${NAME}-%{extensionfamily}.tar \
+		$RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-${NAME}-%{extensionfamily}.tar 
 done
 
 popd
 
 %clean
 rm -rf $RPM_BUILD_ROOT
-
-# If run under sudo
-if [ -n "$SUDO_USER" ] ; then
-    # Allow user to delete the build directory
-    chown -h -R $SUDO_USER .
-    # Some temporary cdroot files like /var/empty/sshd and
-    # /usr/bin/sudo get created with non-readable permissions.
-    find . -not -perm +0600 -exec chmod u+rw {} \;
-    # Allow user to delete the built RPM(s)
-    chown -h -R $SUDO_USER %{_rpmdir}/*
-fi
-
-%post
 
 %files
 %defattr(-,root,root,-)
