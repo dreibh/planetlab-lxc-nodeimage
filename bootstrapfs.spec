@@ -6,8 +6,8 @@
 %define nodefamily %{pldistro}-%{distroname}-%{_arch}
 
 %define name bootstrapfs-%{nodefamily}
-%define version 1.0
-%define taglevel 11
+%define version 2.0
+%define taglevel 0
 
 # pldistro already in the rpm name
 #%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
@@ -144,3 +144,5 @@ fi
 
 * Fri Sep  2 2005 Mark Huang <mlhuang@cotton.CS.Princeton.EDU> - 
 - Initial build.
+
+%define module_current_branch 1.0

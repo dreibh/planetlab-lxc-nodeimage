@@ -11,8 +11,8 @@
 %define nodefamily %{pldistro}-%{distroname}-%{_arch}
 
 %define name noderepo-%{nodefamily}
-%define version 1.0
-%define taglevel 11
+%define version 2.0
+%define taglevel 0
 
 # pldistro already in the rpm name
 #%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
@@ -114,3 +114,5 @@ service plc start packages
 
 * Tue Mar 4 2008 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> -
 - Initial build.
+
+%define module_current_branch 1.0
