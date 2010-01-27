@@ -32,6 +32,10 @@ BuildArch: noarch
 
 Requires: tar, gnupg, sharutils, bzip2
 
+# 5.0 now has 3-fold nodefamily
+%define obsolete_nodefamily %{pldistro}-%{_arch}
+Obsoletes: bootstrapfs-%{obsolete_nodefamily}
+
 AutoReqProv: no
 %define debug_package %{nil}
 
@@ -46,6 +50,15 @@ Group: System Environment/Base
 %description plain
 This package provides the same functions as %{name} but with uncompressed tarball for faster tests.
 
+%package -n nodeyum
+Summary: the MyPLC-side utilities for tweaking nodes yum configs
+Group: System Environment/Base
+%description -n nodeyum 
+Utility scripts for configuring node updates. This package is designed
+for the MyPLC side.
+# need the apache user at install-time
+Requires: httpd 
+
 %prep
 %setup -q
 
@@ -53,6 +66,31 @@ This package provides the same functions as %{name} but with uncompressed tarbal
 pushd BootstrapFS
 ./build.sh %{pldistro} 
 popd BootstrapFS
+
+# xxx in a multi-flavour myplc, we should ship for all fcdistros
+# and let the php scripts do the right thing
+
+pushd BootstrapFS/nodeconfig/yum
+
+# expand list of kexcludes
+
+# scan fcdistros and catenate all repos in 'stock.repo' so db-config can be distro-independant
+
+for fcdistro in $(ls); do
+    [ -d $fcdistro ] || continue
+    KEXCLUDE="exclude=$(../../../build/getkexcludes.sh -f $fcdistro)"
+    pushd $fcdistro/yum.myplc.d
+    echo "* Handling KEXCLUDE in yum repo for $fcdistro ($KEXCLUDE)"
+    for filein in $(find . -name '*.in') ; do
+	file=$(echo $filein | sed -e "s,\.in$,,")
+	sed -e "s,@KEXCLUDE@,$KEXCLUDE,g" $filein > $file
+    done
+    rm -f stock.repo
+    cat *.repo > stock.repo
+    popd
+done
+
+popd
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -72,11 +110,27 @@ for pkgs in $(ls ../build/config.%{pldistro}/bootstrapfs-*.pkgs) ; do
     install -D -m 644 %{pldistro}-filesystems/bootstrapfs-${NAME}-%{extensionfamily}.tar \
 		$RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-${NAME}-%{extensionfamily}.tar 
 done
+popd
 
+pushd BootstrapFS/nodeconfig/yum
+echo "* Installing MyPLC-side yum stuff"
+# expose (fixed) myplc.repo.php as				            https://<plc>/yum/myplc.repo.php
+install -D -m 644 ./yum/myplc.repo.php			     $RPM_BUILD_ROOT/var/www/html/yum/myplc.repo.php
+# expose the fcdistro-dependant yum.conf as				    https://<plc>/yum/yum.conf
+install -D -m 644 ./yum/%{distroname}/yum.conf		     $RPM_BUILD_ROOT/var/www/html/yum/yum.conf
+# expose the (fcdistro-dependant) stock.repo as				    https://<plc>/yum/stock.repo
+install -D -m 644 ./yum/%{distroname}/yum.myplc.d/stock.repo $RPM_BUILD_ROOT/var/www/html/yum/stock.repo
 popd
 
 %clean
 rm -rf $RPM_BUILD_ROOT
+
+%post -n nodeyum
+# the boot manager upload area
+mkdir -p /var/log/bm
+chown apache:apache /var/log/bm
+chmod 700 /var/log/bm
+
 
 %files
 %defattr(-,root,root,-)
@@ -85,6 +139,10 @@ rm -rf $RPM_BUILD_ROOT
 %files plain
 %defattr(-,root,root,-)
 /var/www/html/boot/bootstrapfs*.tar
+
+%files -n nodeyum
+%defattr(-,root,root,-)
+/var/www/html/yum
 
 %changelog
 * Mon Jan 04 2010 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - BootstrapFS-1.0-11

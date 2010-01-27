@@ -9,6 +9,7 @@
 # %{node_rpms_plus} : as a +++ separated list of rpms from the build dir
 
 %define nodefamily %{pldistro}-%{distroname}-%{_arch}
+%define obsolete_nodefamily %{pldistro}-%{_arch}
 
 %define name noderepo-%{nodefamily}
 %define version 2.0
@@ -36,6 +37,10 @@ BuildArch: noarch
 
 BuildRequires: rsync 
 Requires: myplc
+
+# 5.0 now has 3-fold nodefamily
+%define obsolete_nodefamily %{pldistro}-%{_arch}
+Obsoletes: noderepo-%{obsolete_nodefamily}
 
 %define debug_package %{nil}
 
