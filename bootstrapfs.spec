@@ -65,19 +65,16 @@ Requires: httpd
 %build
 pushd BootstrapFS
 ./build.sh %{pldistro} 
-popd BootstrapFS
+popd
 
 # xxx in a multi-flavour myplc, we should ship for all fcdistros
 # and let the php scripts do the right thing
 
 pushd BootstrapFS/nodeconfig/yum
-
-# expand list of kexcludes
-
 # scan fcdistros and catenate all repos in 'stock.repo' so db-config can be distro-independant
-
 for fcdistro in $(ls); do
     [ -d $fcdistro ] || continue
+    # get kexcludes for that distro
     KEXCLUDE="exclude=$(../../../build/getkexcludes.sh -f $fcdistro)"
     pushd $fcdistro/yum.myplc.d
     echo "* Handling KEXCLUDE in yum repo for $fcdistro ($KEXCLUDE)"
@@ -89,7 +86,6 @@ for fcdistro in $(ls); do
     cat *.repo > stock.repo
     popd
 done
-
 popd
 
 %install
