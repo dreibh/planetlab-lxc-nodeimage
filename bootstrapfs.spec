@@ -108,7 +108,7 @@ for pkgs in $(ls ../build/config.%{pldistro}/bootstrapfs-*.pkgs) ; do
 done
 popd
 
-pushd BootstrapFS/nodeconfig/yum
+pushd BootstrapFS/nodeconfig
 echo "* Installing MyPLC-side yum stuff"
 # expose (fixed) myplc.repo.php as				            https://<plc>/yum/myplc.repo.php
 install -D -m 644 ./yum/myplc.repo.php			     $RPM_BUILD_ROOT/var/www/html/yum/myplc.repo.php
