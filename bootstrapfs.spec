@@ -56,8 +56,6 @@ Group: System Environment/Base
 %description -n nodeyum 
 Utility scripts for configuring node updates. This package is designed
 for the MyPLC side.
-# need the apache user at install-time
-Requires: httpd 
 
 %prep
 %setup -q
@@ -108,14 +106,20 @@ for pkgs in $(ls ../build/config.%{pldistro}/bootstrapfs-*.pkgs) ; do
 done
 popd
 
-pushd BootstrapFS/nodeconfig
-echo "* Installing MyPLC-side yum stuff"
+pushd BootstrapFS
+echo "* Installing MyPLC-side nodes yum config utilities"
 # expose (fixed) myplc.repo.php as				            https://<plc>/yum/myplc.repo.php
-install -D -m 644 ./yum/myplc.repo.php			     $RPM_BUILD_ROOT/var/www/html/yum/myplc.repo.php
+install -D -m 644 ./nodeconfig/yum/myplc.repo.php			    $RPM_BUILD_ROOT/var/www/html/yum/myplc.repo.php
 # expose the fcdistro-dependant yum.conf as				    https://<plc>/yum/yum.conf
-install -D -m 644 ./yum/%{distroname}/yum.conf		     $RPM_BUILD_ROOT/var/www/html/yum/yum.conf
+install -D -m 644 ./nodeconfig/yum/%{distroname}/yum.conf		    $RPM_BUILD_ROOT/var/www/html/yum/yum.conf
 # expose the (fcdistro-dependant) stock.repo as				    https://<plc>/yum/stock.repo
-install -D -m 644 ./yum/%{distroname}/yum.myplc.d/stock.repo $RPM_BUILD_ROOT/var/www/html/yum/stock.repo
+install -D -m 644 ./nodeconfig/yum/%{distroname}/yum.myplc.d/stock.repo	    $RPM_BUILD_ROOT/var/www/html/yum/stock.repo
+
+# Install initscripts
+echo "* Installing plc.d initscripts"
+find plc.d | cpio -p -d -u ${RPM_BUILD_ROOT}/etc/
+chmod 755 ${RPM_BUILD_ROOT}/etc/plc.d/*
+
 popd
 
 pushd BootstrapFS
@@ -127,12 +131,6 @@ popd
 
 %clean
 rm -rf $RPM_BUILD_ROOT
-
-%post -n nodeyum
-# the boot manager upload area
-mkdir -p /var/log/bm
-chown apache:apache /var/log/bm
-chmod 700 /var/log/bm
 
 
 %files
@@ -147,6 +145,7 @@ chmod 700 /var/log/bm
 %defattr(-,root,root,-)
 /var/www/html/yum
 /etc/planetlab/db-config.d
+/etc/plc.d
 
 %changelog
 * Mon Jan 04 2010 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - BootstrapFS-1.0-11
