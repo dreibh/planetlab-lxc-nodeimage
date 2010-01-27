@@ -118,6 +118,13 @@ install -D -m 644 ./yum/%{distroname}/yum.conf		     $RPM_BUILD_ROOT/var/www/htm
 install -D -m 644 ./yum/%{distroname}/yum.myplc.d/stock.repo $RPM_BUILD_ROOT/var/www/html/yum/stock.repo
 popd
 
+pushd BootstrapFS
+echo "* Installing db-config.d files"
+mkdir -p ${RPM_BUILD_ROOT}/etc/planetlab/db-config.d
+cp db-config.d/* ${RPM_BUILD_ROOT}/etc/planetlab/db-config.d
+chmod 444 ${RPM_BUILD_ROOT}/etc/planetlab/db-config.d/*
+popd
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -139,6 +146,7 @@ chmod 700 /var/log/bm
 %files -n nodeyum
 %defattr(-,root,root,-)
 /var/www/html/yum
+/etc/planetlab/db-config.d
 
 %changelog
 * Mon Jan 04 2010 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - BootstrapFS-1.0-11

@@ -1,0 +1,62 @@
+# -*-python-*-
+# $Id: 030-conf_files 16642 2010-01-18 17:14:40Z thierry $
+# $URL: svn+ssh://thierry@svn.planet-lab.org/svn/MyPLC/trunk/db-config.d/030-conf_files $
+#################### conf files
+
+conf_files = [
+
+# myplc/noderepo
+    # YUM configuration
+    {'enabled': True,
+     'source': 'yum/myplc.repo.php?gpgcheck=1',
+     'dest': '/etc/yum.myplc.d/myplc.repo',
+     'file_permissions': '644', 'file_owner': 'root', 'file_group': 'root',
+     'preinstall_cmd': '', 'postinstall_cmd': '', 'error_cmd': '',
+     'ignore_cmd_errors': False,
+     'always_update': False},
+    {'enabled': True,
+     'source': 'yum/yum.conf',
+     'dest': '/etc/yum.conf',
+     'file_permissions': '644', 'file_owner': 'root', 'file_group': 'root',
+     'preinstall_cmd': '', 'postinstall_cmd': '', 'error_cmd': '',
+     'ignore_cmd_errors': False,
+     'always_update': False},
+    {'enabled': True,
+     'source': 'yum/stock.repo',
+     'dest': '/etc/yum.myplc.d/stock.repo',
+     'file_permissions': '644', 'file_owner': 'root', 'file_group': 'root',
+     'preinstall_cmd': '', 'postinstall_cmd': '', 'error_cmd': '',
+     'ignore_cmd_errors': False,
+     'always_update': False},
+    
+# NodeUpdate
+    {'enabled': True,
+     'source': 'PlanetLabConf/delete-rpm-list-production',
+     'dest': '/etc/planetlab/delete-rpm-list',
+     'file_permissions': '644',
+     'file_owner': 'root',
+     'file_group': 'root',
+     'preinstall_cmd': '',
+     'postinstall_cmd': '',
+     'error_cmd': '',
+     'ignore_cmd_errors': False,
+     'always_update': False},
+    
+# NodeUpdate
+    # /etc/planetlab/extensions
+    {'enabled': True,
+     'source': 'PlanetLabConf/extensions.php',
+     'dest': '/etc/planetlab/extensions',
+     'file_permissions': '644',
+     'file_owner': 'root',
+     'file_group': 'root',
+     'preinstall_cmd': '',
+     'postinstall_cmd': '',
+     'error_cmd': '',
+     'ignore_cmd_errors': False,
+     'always_update': False},
+    
+    ]
+
+for conf_file in conf_files:
+	SetConfFile(conf_file)
