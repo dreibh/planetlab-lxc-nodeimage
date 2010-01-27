@@ -1,0 +1,131 @@
+#!/bin/bash
+# $Id$
+# $URL$
+#
+# priority: 1200
+#
+# Update node package repository metadata and sign packages
+#
+# Mark Huang <mlhuang@cs.princeton.edu>
+# Copyright (C) 2006 The Trustees of Princeton University
+#
+
+# Source function library and configuration
+. /etc/plc.d/functions
+. /etc/planetlab/plc_config
+
+# Be verbose
+set -x
+
+case "$1" in
+    start)
+	if [ "$PLC_BOOT_ENABLED" != "1" ] ; then
+	    exit 0
+	fi
+
+	MESSAGE=$"Signing and indexing node packages"
+	dialog "$MESSAGE"
+
+	shopt -s nullglob
+
+	shift
+	if [[ -z "$@" ]] ; then
+	    # use all subdirs in install-rpms by default
+	    repositories=/var/www/html/install-rpms/*
+	else
+	    # else use argv
+	    repositories="$@"
+	fi
+
+	### availability of repo indexing tools
+	# old one - might be needed for old-style nodes
+	type -p yum-arch > /dev/null && have_yum_arch="true"
+	# new one
+	type -p createrepo > /dev/null && have_createrepo="true"
+
+	for repository in $repositories ; do
+	    # the rpms that need signing
+	    new_rpms=
+	    # and the corresponding stamps
+	    new_stamps=
+	    # is there a need to refresh yum metadata
+	    need_yum_arch=
+	    need_createrepo=
+
+	    # right after installation, no package is present
+	    # but we still need to create index 
+	    [ -n "$have_yum_arch" -a ! -f $repository/headers/header.info ] && need_yum_arch=true
+	    [ -n "$have_createrepo" -a ! -f $repository/repodata/repomd.xml ] && need_createrepo=true
+	    
+	    for package in $(find $repository/ -name '*.rpm') ; do
+	        stamp=$repository/signed-stamps/$(basename $package).signed
+		# If package is newer than signature stamp
+		if [ $package -nt $stamp ] ; then
+		    new_rpms="$new_rpms $package"
+		    new_stamps="$new_stamps $stamp"
+		fi
+		# Or than yum-arch headers
+		[ -n "$have_yum_arch" ] && [ $package -nt $repository/headers/header.info ] && need_yum_arch=true
+		# Or than createrepo database
+		[ -n "$have_createrepo" ] && [ $package -nt $repository/repodata/repomd.xml ] && need_createrepo=true
+	    done
+
+	    if [ -n "$new_rpms" ] ; then
+		# Create a stamp once the package gets signed
+		mkdir $repository/signed-stamps 2> /dev/null
+
+		# Sign RPMS. setsid detaches rpm from the terminal,
+                # allowing the (hopefully blank) GPG password to be
+                # entered from stdin instead of /dev/tty.
+		echo | setsid rpm \
+		    --define "_signature gpg" \
+		    --define "_gpg_path /etc/planetlab" \
+		    --define "_gpg_name $PLC_MAIL_SUPPORT_ADDRESS" \
+		    --resign $new_rpms && touch $new_stamps
+		check
+	    fi
+
+	    # Update repository index / yum metadata. 
+
+	    if [ -n "$need_yum_arch" ] ; then
+		# yum-arch sometimes leaves behind
+		# .oldheaders and .olddata directories accidentally.
+		rm -rf $repository/{.oldheaders,.olddata}
+		yum-arch $repository 
+		check
+	    fi
+
+	    if [ -n "$need_createrepo" ] ; then
+		if [ -f $repository/yumgroups.xml ] ; then
+		    createrepo --quiet -g yumgroups.xml $repository 
+		else
+		    createrepo --quiet $repository
+		fi
+		check
+	    fi
+	done
+
+	result "$MESSAGE"
+	;;
+    clean)
+	shift
+	if [[ -z "$@" ]] ; then
+	    # use all subdirs in install-rpms by default
+	    repositories=/var/www/html/install-rpms/*
+	else
+	    # else use argv
+	    repositories=$@
+	fi
+
+	for repository in $repositories ; do
+	    rm -rf $repository/signed-stamps
+	    rm -rf $repository/repodata
+	    rm -rf $repository/headers
+	done
+	;;
+    *)
+        echo "Usage: $0 start|clean [repo ..]"
+	;;
+esac
+
+exit $ERRORS
