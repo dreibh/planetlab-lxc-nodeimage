@@ -8,7 +8,7 @@
 
 %define name bootstrapfs-%{nodefamily}
 %define version 2.0
-%define taglevel 0
+%define taglevel 1
 
 # pldistro already in the rpm name
 #%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
@@ -148,6 +148,12 @@ rm -rf $RPM_BUILD_ROOT
 /etc/plc.d
 
 %changelog
+* Fri Jan 29 2010 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - BootstrapFS-2.0-1
+- first working version of 5.0:
+- pld.c/, db-config.d/ and nodeconfig/ scripts should now sit in the module they belong to
+- nodefailiy is 3-fold with pldistro-fcdistro-arch
+- new module nodeyum; first draft has the php scripts and conf_files for tweaking nodes yum config
+
 * Mon Jan 04 2010 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - BootstrapFS-1.0-11
 - for building on fedora12
 
