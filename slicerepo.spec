@@ -19,12 +19,12 @@
 #%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
 %define release %{taglevel}%{?date:.%{date}}
 
-Vendor: PlanetLab
-Packager: PlanetLab Central <support@planet-lab.org>
+Vendor: OneLab
+Packager: PlanetLab Europe <build@onelab.eu>
 Distribution: PlanetLab %{plrelease}
 URL: %(echo %{url} | cut -d ' ' -f 2)
 
-Summary: The initial content of the yum repository for nodes
+Summary: The yum repository for slices, to be installed on the myplc-side
 Name: %{name}
 Version: %{version}
 Release: %{release}
@@ -38,14 +38,10 @@ BuildArch: noarch
 BuildRequires: rsync 
 Requires: myplc
 
-# 5.0 now has 3-fold nodefamily
-%define obsolete_nodefamily %{pldistro}-%{_arch}
-Obsoletes: slicerepo-%{obsolete_nodefamily}
-
 %define debug_package %{nil}
 
 %description
-This rpm contains all the rpms designed for running on a PlanetLab node
+This rpm contains all the rpms that might ship on a sliver image
 they come organized into a yum repository 
 
 %prep

@@ -19,12 +19,12 @@
 #%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
 %define release %{taglevel}%{?date:.%{date}}
 
-Vendor: PlanetLab
-Packager: PlanetLab Central <support@planet-lab.org>
+Vendor: OneLab
+Packager: PlanetLab Europe <build@onelab.eu>
 Distribution: PlanetLab %{plrelease}
 URL: %(echo %{url} | cut -d ' ' -f 2)
 
-Summary: The initial content of the yum repository for nodes
+Summary: The yum repository for nodes, to be installed on the myplc-side
 Name: %{name}
 Version: %{version}
 Release: %{release}
