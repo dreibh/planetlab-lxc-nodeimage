@@ -61,13 +61,13 @@ for the MyPLC side.
 %setup -q
 
 %build
+
+############################## node-side
 pushd BootstrapFS
 ./build.sh %{pldistro} 
 popd
 
-# xxx in a multi-flavour myplc, we should ship for all fcdistros
-# and let the php scripts do the right thing
-
+############################## server-side
 pushd BootstrapFS/nodeconfig/yum
 # scan fcdistros and catenate all repos in 'stock.repo' so db-config can be distro-independant
 for fcdistro in $(ls); do
@@ -89,6 +89,7 @@ popd
 %install
 rm -rf $RPM_BUILD_ROOT
 
+############################## node-side
 pushd BootstrapFS
 #arch=$(uname -i)
 
@@ -106,6 +107,10 @@ for pkgs in $(ls ../build/config.%{pldistro}/bootstrapfs-*.pkgs) ; do
 done
 popd
 
+############################## server-side
+# xxx unfinished business here
+# xxx in a multi-flavour myplc, we should ship for all fcdistros
+# and let the php scripts do the right thing
 pushd BootstrapFS
 echo "* Installing MyPLC-side nodes yum config utilities"
 # expose (fixed) myplc.repo.php as				            https://<plc>/yum/myplc.repo.php
@@ -120,9 +125,6 @@ echo "* Installing plc.d initscripts"
 find plc.d | cpio -p -d -u ${RPM_BUILD_ROOT}/etc/
 chmod 755 ${RPM_BUILD_ROOT}/etc/plc.d/*
 
-popd
-
-pushd BootstrapFS
 echo "* Installing db-config.d files"
 mkdir -p ${RPM_BUILD_ROOT}/etc/planetlab/db-config.d
 cp db-config.d/* ${RPM_BUILD_ROOT}/etc/planetlab/db-config.d
