@@ -74,8 +74,8 @@ service plc start packages
 
 %files
 %defattr(-,root,root,-)
-/var/www/html/install-rpms/%{nodefamily}
+/var/www/html/install-rpms/slice-%{nodefamily}
 # don't overwrite yumgroups.xml if exists
-%config(noreplace) /var/www/html/install-rpms/%{nodefamily}/yumgroups.xml
+%config(noreplace) /var/www/html/install-rpms/slice-%{nodefamily}/yumgroups.xml
 
 %changelog
