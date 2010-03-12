@@ -13,7 +13,7 @@
 
 %define name slicerepo-%{nodefamily}
 %define version 2.0
-%define taglevel 0
+%define taglevel 2
 
 # pldistro already in the rpm name
 #%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
@@ -75,3 +75,6 @@ service plc start packages
 %config(noreplace) /var/www/html/install-rpms/slice-%{nodefamily}/yumgroups.xml
 
 %changelog
+* Fri Mar 12 2010 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - BootstrapFS-2.0-2
+- new slicerepo package for exposing stuff to slivers
+
