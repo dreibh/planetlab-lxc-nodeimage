@@ -70,7 +70,8 @@ install -D -m 644 %{_topdir}/RPMS/yumgroups.xml $RPM_BUILD_ROOT/var/www/html/ins
 rm -rf $RPM_BUILD_ROOT
 
 %post
-service plc start packages
+# we invoke the gpg step here just in case noderepo would get installed before myplc is started
+service plc start gpg packages
 
 %files
 %defattr(-,root,root,-)
