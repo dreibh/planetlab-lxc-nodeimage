@@ -150,6 +150,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n nodeyum
 %defattr(-,root,root,-)
 /var/www/html/yum
+/var/www/html/yum.legacy
 /etc/planetlab/db-config.d
 /etc/plc.d
 
