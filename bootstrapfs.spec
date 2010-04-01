@@ -113,12 +113,16 @@ popd
 # and let the php scripts do the right thing
 pushd BootstrapFS
 echo "* Installing MyPLC-side nodes yum config utilities"
-# expose (fixed) myplc.repo.php as				            https://<plc>/yum/myplc.repo.php
-install -D -m 644 ./nodeconfig/yum/myplc.repo.php			    $RPM_BUILD_ROOT/var/www/html/yum/myplc.repo.php
-# expose the fcdistro-dependant yum.conf as				    https://<plc>/yum/yum.conf
-install -D -m 644 ./nodeconfig/yum/%{distroname}/yum.conf		    $RPM_BUILD_ROOT/var/www/html/yum/yum.conf
-# expose the (fcdistro-dependant) stock.repo as				    https://<plc>/yum/stock.repo
-install -D -m 644 ./nodeconfig/yum/%{distroname}/yum.myplc.d/stock.repo	    $RPM_BUILD_ROOT/var/www/html/yum/stock.repo
+echo "* Multi-fcdistro yum stuff"
+mkdir -p $RPM_BUILD_ROOT/var/www/html/yum/
+rsync -av ./nodeconfig/yum/						    $RPM_BUILD_ROOT/var/www/html/yum/
+echo "* Legacy (single fcdistro) yum stuff"
+# expose (fixed) myplc.repo.php as				            https://<plc>/yum.legacy/myplc.repo.php
+install -D -m 644 ./nodeconfig/yum/myplc.repo.php			    $RPM_BUILD_ROOT/var/www/html/yum.legacy/myplc.repo.php
+# expose the fcdistro-dependant yum.conf as				    https://<plc>/yum.legacy/yum.conf
+install -D -m 644 ./nodeconfig/yum/%{distroname}/yum.conf		    $RPM_BUILD_ROOT/var/www/html/yum.legacy/yum.conf
+# expose the (fcdistro-dependant) stock.repo as				    https://<plc>/yum.legacy/stock.repo
+install -D -m 644 ./nodeconfig/yum/%{distroname}/yum.myplc.d/stock.repo	    $RPM_BUILD_ROOT/var/www/html/yum.legacy/stock.repo
 
 # Install initscripts
 echo "* Installing plc.d initscripts"
