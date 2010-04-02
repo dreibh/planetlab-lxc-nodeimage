@@ -42,7 +42,10 @@ $nodeflavour=$adm->GetNodeFlavour($node_id);
 $nodefamily=$nodeflavour['nodefamily'];
 
 $topdir=$_SERVER['DOCUMENT_ROOT'] . "/install-rpms/" . $nodefamily;
-$topurl="https://$PLC_BOOT_HOST" . "/install-rpms/" . $nodefamily;
+# Thierry : starting with fedora 12, yum complains about not being able to 
+# verify the certificates; as we're using gpgcheck on top of the rest, 
+# it's safe to use http only
+$topurl="http://$PLC_BOOT_HOST" . "/install-rpms/" . $nodefamily;
 
 if ( is_dir (realpath($topdir))) {
   echo "# This directory was checked to exist on the server-side\n";
