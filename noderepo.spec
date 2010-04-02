@@ -70,8 +70,11 @@ install -D -m 644 %{_topdir}/RPMS/yumgroups.xml $RPM_BUILD_ROOT/var/www/html/ins
 rm -rf $RPM_BUILD_ROOT
 
 %post
-# we invoke the gpg step here just in case noderepo would get installed before myplc is started
-service plc start gpg packages
+# it would at first glance seem to make sense to invoke service plc start gpg here as well, 
+# as noderepo might get installed before myplc gets even started 
+# this however exhibit a deadlock, as rpm --almatches -e gpg-pubkey waits for transaction lock
+# that is help by the calling yum/rpm
+service plc start packages
 
 %files
 %defattr(-,root,root,-)
