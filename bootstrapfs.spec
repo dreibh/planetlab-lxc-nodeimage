@@ -8,7 +8,7 @@
 
 %define name bootstrapfs-%{nodefamily}
 %define version 2.0
-%define taglevel 2
+%define taglevel 3
 
 # pldistro already in the rpm name
 #%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
@@ -144,6 +144,12 @@ rm -rf $RPM_BUILD_ROOT
 /etc/plc.d
 
 %changelog
+* Fri Apr 02 2010 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - BootstrapFS-2.0-3
+- choice between various pldistros is not made at build time, but at run time
+- relies on GetNodeFlavour to expose the node's fcdistro - requires PLCAPI-5.0-5
+- in addition, the baseurl for the myplc repo is http:// and not https:// anymore
+- the https method does not work on fedora 12, and GPG is used below anyway
+
 * Fri Mar 12 2010 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - BootstrapFS-2.0-2
 - new slicerepo package for exposing stuff to slivers
 
