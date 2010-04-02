@@ -68,6 +68,7 @@ pushd BootstrapFS
 popd
 
 ############################## server-side
+# ship all fcdistros for multi-fcdistros myplc, and let the php scripts do the right thing
 pushd BootstrapFS/nodeconfig/yum
 # scan fcdistros and catenate all repos in 'stock.repo' so db-config can be distro-independant
 for fcdistro in $(ls); do
@@ -91,7 +92,6 @@ rm -rf $RPM_BUILD_ROOT
 
 ############################## node-side
 pushd BootstrapFS
-#arch=$(uname -i)
 
 install -D -m 644 bootstrapfs-%{nodefamily}.tar.bz2 \
 	$RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-%{nodefamily}.tar.bz2
@@ -108,21 +108,11 @@ done
 popd
 
 ############################## server-side
-# xxx unfinished business here
-# xxx in a multi-flavour myplc, we should ship for all fcdistros
-# and let the php scripts do the right thing
+# ship all fcdistros for multi-fcdistros myplc, and let the php scripts do the right thing
 pushd BootstrapFS
-echo "* Installing MyPLC-side nodes yum config utilities"
-echo "* Multi-fcdistro yum stuff"
+echo "* Installing MyPLC-side nodes yum config utilities (support for multi-fcdistro)"
 mkdir -p $RPM_BUILD_ROOT/var/www/html/yum/
-rsync -av ./nodeconfig/yum/						    $RPM_BUILD_ROOT/var/www/html/yum/
-echo "* Legacy (single fcdistro) yum stuff"
-# expose (fixed) myplc.repo.php as				            https://<plc>/yum.legacy/myplc.repo.php
-install -D -m 644 ./nodeconfig/yum/myplc.repo.php			    $RPM_BUILD_ROOT/var/www/html/yum.legacy/myplc.repo.php
-# expose the fcdistro-dependant yum.conf as				    https://<plc>/yum.legacy/yum.conf
-install -D -m 644 ./nodeconfig/yum/%{distroname}/yum.conf		    $RPM_BUILD_ROOT/var/www/html/yum.legacy/yum.conf
-# expose the (fcdistro-dependant) stock.repo as				    https://<plc>/yum.legacy/stock.repo
-install -D -m 644 ./nodeconfig/yum/%{distroname}/yum.myplc.d/stock.repo	    $RPM_BUILD_ROOT/var/www/html/yum.legacy/stock.repo
+rsync -av ./nodeconfig/yum/	$RPM_BUILD_ROOT/var/www/html/yum/
 
 # Install initscripts
 echo "* Installing plc.d initscripts"
@@ -150,7 +140,6 @@ rm -rf $RPM_BUILD_ROOT
 %files -n nodeyum
 %defattr(-,root,root,-)
 /var/www/html/yum
-/var/www/html/yum.legacy
 /etc/planetlab/db-config.d
 /etc/plc.d
 

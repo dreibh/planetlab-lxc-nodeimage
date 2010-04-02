@@ -1,3 +1,4 @@
+# $URL
 [updates]
 name=Fedora $releasever - $basearch - Updates
 failovermethod=priority
