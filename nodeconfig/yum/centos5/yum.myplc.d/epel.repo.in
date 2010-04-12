@@ -1,4 +1,4 @@
-# $URL
+# $URL$
 [epel]
 name=Extra Packages for Enterprise Linux 5 - $basearch
 #baseurl=http://download.fedoraproject.org/pub/epel/5/$basearch

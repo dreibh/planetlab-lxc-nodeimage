@@ -1,4 +1,4 @@
-# $URL
+# $URL$
 [fedora]
 name=Fedora $releasever - $basearch
 failovermethod=priority
