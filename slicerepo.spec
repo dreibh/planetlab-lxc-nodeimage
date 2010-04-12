@@ -13,7 +13,7 @@
 
 %define name slicerepo-%{nodefamily}
 %define version 2.0
-%define taglevel 3
+%define taglevel 4
 
 # pldistro already in the rpm name
 #%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
@@ -75,6 +75,9 @@ service plc start packages
 %config(noreplace) /var/www/html/install-rpms/slice-%{nodefamily}/yumgroups.xml
 
 %changelog
+* Mon Apr 12 2010 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - BootstrapFS-2.0-4
+- fix unmatched $ in URL svn keywords
+
 * Fri Apr 02 2010 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - BootstrapFS-2.0-3
 - choice between various pldistros is not made at build time, but at run time
 - relies on GetNodeFlavour to expose the node's fcdistro - requires PLCAPI-5.0-5
