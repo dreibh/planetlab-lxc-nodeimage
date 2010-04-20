@@ -43,6 +43,21 @@ case "$1" in
 	# new one
 	type -p createrepo > /dev/null && have_createrepo="true"
 
+
+        ### copy vserver-PLDISTRO* and vserver-systemslices-PLDISTRO*
+        ### pacakges to each repository to be able to create different
+        ### flavours of vservers on nodes
+        for repository1 in $repositories; do
+            for repository2 in $repositories; do
+                if [[ $(basename $repository1) == ${PLC_FLAVOUR_NODE_PLDISTRO}* ]]  \
+                    && [[ $(basename $repository2) == ${PLC_FLAVOUR_NODE_PLDISTRO}* ]] \
+                    && [[ $repository1 != $repository2 ]] ; then
+                    cp -a $repository1/vserver{,-systemslices}-${PLC_FLAVOUR_NODE_PLDISTRO}* $repository2
+                fi
+            done
+        done
+
+
 	for repository in $repositories ; do
 	    # the rpms that need signing
 	    new_rpms=
