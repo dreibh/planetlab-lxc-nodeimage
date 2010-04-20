@@ -48,15 +48,18 @@ case "$1" in
         ### pacakges to each repository to be able to create different
         ### flavours of vservers on nodes
         for repository1 in $repositories; do
+            DISTRO=${PLC_FLAVOUR_SLICE_PLDISTRO}
+            VSERVER_PKG=vserver-$(basename $repository1)
+            VSERVER_SYS_SLICES_PKG=vserver-systemslices-$(basename $repository1)
             for repository2 in $repositories; do
-                if [[ $(basename $repository1) == ${PLC_FLAVOUR_NODE_PLDISTRO}* ]]  \
-                    && [[ $(basename $repository2) == ${PLC_FLAVOUR_NODE_PLDISTRO}* ]] \
+                if [[ $(basename $repository1) == ${DISTRO}* ]]  \
+                    && [[ $(basename $repository2) == ${DISTRO}* ]] \
                     && [[ $repository1 != $repository2 ]] ; then
-                    cp -a $repository1/vserver{,-systemslices}-${PLC_FLAVOUR_NODE_PLDISTRO}* $repository2
+                        cp -a $repository1/${VSERVER_PKG}* $repository2
+                        cp -a $repository1/${VSERVER_SYS_SLICES_PKG}* $repository2
                 fi
             done
         done
-
 
 	for repository in $repositories ; do
 	    # the rpms that need signing
