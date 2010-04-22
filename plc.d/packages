@@ -55,8 +55,8 @@ case "$1" in
                 if [[ $(basename $repository1) == ${DISTRO}* ]]  \
                     && [[ $(basename $repository2) == ${DISTRO}* ]] \
                     && [[ $repository1 != $repository2 ]] ; then
-                        cp -a $repository1/${VSERVER_PKG}* $repository2
-                        cp -a $repository1/${VSERVER_SYS_SLICES_PKG}* $repository2
+                        ln -s $repository1/${VSERVER_PKG}* $repository2
+                        ln -s $repository1/${VSERVER_SYS_SLICES_PKG}* $repository2
                 fi
             done
         done
