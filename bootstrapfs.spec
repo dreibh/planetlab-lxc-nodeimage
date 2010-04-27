@@ -8,7 +8,7 @@
 
 %define name bootstrapfs-%{nodefamily}
 %define version 2.0
-%define taglevel 4
+%define taglevel 5
 
 # pldistro already in the rpm name
 #%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
@@ -144,6 +144,9 @@ rm -rf $RPM_BUILD_ROOT
 /etc/plc.d
 
 %changelog
+* Tue Apr 27 2010 Talip Baris Metin <Talip-Baris.Metin@sophia.inria.fr> - BootstrapFS-2.0-5
+- support different flavours of vservers on nodes
+
 * Mon Apr 12 2010 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - BootstrapFS-2.0-4
 - fix unmatched $ in URL svn keywords
 
