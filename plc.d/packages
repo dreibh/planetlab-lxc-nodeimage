@@ -45,7 +45,7 @@ case "$1" in
 
 
         ### symlink vserver-PLDISTRO* and vserver-systemslices-PLDISTRO*
-        ### pacakges to each repository to be able to create different
+        ### packages to each repository to be able to create different
         ### flavours of vservers on nodes
         for repository1 in $repositories; do
             DISTRO=${PLC_FLAVOUR_SLICE_PLDISTRO}
