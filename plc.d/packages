@@ -44,8 +44,8 @@ case "$1" in
 	type -p createrepo > /dev/null && have_createrepo="true"
 
 
-        ### copy vserver-PLDISTRO* and vserver-systemslices-PLDISTRO*
-        ### packages to each repository to be able to create different
+        ### symlink vserver-PLDISTRO* and vserver-systemslices-PLDISTRO*
+        ### pacakges to each repository to be able to create different
         ### flavours of vservers on nodes
         for repository1 in $repositories; do
             DISTRO=${PLC_FLAVOUR_SLICE_PLDISTRO}
