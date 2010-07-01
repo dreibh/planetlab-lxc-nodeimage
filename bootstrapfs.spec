@@ -95,15 +95,25 @@ pushd BootstrapFS
 
 install -D -m 644 bootstrapfs-%{nodefamily}.tar.bz2 \
 	$RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-%{nodefamily}.tar.bz2
+sha1sum $RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-%{nodefamily}.tar.bz2 > \
+        $RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-%{nodefamily}.tar.bz2.sha1sum
+
 install -D -m 644 bootstrapfs-%{nodefamily}.tar \
 	$RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-%{nodefamily}.tar
+sha1sum $RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-%{nodefamily}.tar > \
+        $RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-%{nodefamily}.tar.sha1sum
 
 for pkgs in $(ls ../build/config.%{pldistro}/bootstrapfs-*.pkgs) ; do 
     NAME=$(basename $pkgs .pkgs | sed -e s,bootstrapfs-,,)
     install -D -m 644 %{pldistro}-filesystems/bootstrapfs-${NAME}-%{extensionfamily}.tar.bz2 \
 		$RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-${NAME}-%{extensionfamily}.tar.bz2 
+    sha1sum $RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-${NAME}-%{nodefamily}.tar.bz2 > \
+        $RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-${NAME}-%{nodefamily}.tar.bz2.sha1sum
+
     install -D -m 644 %{pldistro}-filesystems/bootstrapfs-${NAME}-%{extensionfamily}.tar \
-		$RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-${NAME}-%{extensionfamily}.tar 
+		$RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-${NAME}-%{extensionfamily}.tar
+    sha1sum $RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-${NAME}-%{extensionfamily}.tar > \
+        $RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-${NAME}-%{extensionfamily}.tar.sha1sum
 done
 popd
 
@@ -132,10 +142,12 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 /var/www/html/boot/bootstrapfs*.tar.bz2
+/var/www/html/boot/bootstrapfs*.tar.bz2.sha1sum
 
 %files plain
 %defattr(-,root,root,-)
 /var/www/html/boot/bootstrapfs*.tar
+/var/www/html/boot/bootstrapfs*.tar.sha1sum
 
 %files -n nodeyum
 %defattr(-,root,root,-)
