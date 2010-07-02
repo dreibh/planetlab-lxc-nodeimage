@@ -63,13 +63,14 @@ for the MyPLC side.
 %build
 
 ############################## node-side
-pushd BootstrapFS
+[ -d bootstrapfs ] || ln -s BootstrapFS bootstrapfs
+pushd bootstrapfs
 ./build.sh %{pldistro} 
 popd
 
 ############################## server-side
 # ship all fcdistros for multi-fcdistros myplc, and let the php scripts do the right thing
-pushd BootstrapFS/nodeconfig/yum
+pushd bootstrapfs/nodeconfig/yum
 # scan fcdistros and catenate all repos in 'stock.repo' so db-config can be distro-independant
 for fcdistro in $(ls); do
     [ -d $fcdistro ] || continue
@@ -91,7 +92,7 @@ popd
 rm -rf $RPM_BUILD_ROOT
 
 ############################## node-side
-pushd BootstrapFS
+pushd bootstrapfs
 
 install -D -m 644 bootstrapfs-%{nodefamily}.tar.bz2 \
 	$RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-%{nodefamily}.tar.bz2
@@ -119,7 +120,7 @@ popd
 
 ############################## server-side
 # ship all fcdistros for multi-fcdistros myplc, and let the php scripts do the right thing
-pushd BootstrapFS
+pushd bootstrapfs
 echo "* Installing MyPLC-side nodes yum config utilities (support for multi-fcdistro)"
 mkdir -p $RPM_BUILD_ROOT/var/www/html/yum/
 rsync -av ./nodeconfig/yum/	$RPM_BUILD_ROOT/var/www/html/yum/
