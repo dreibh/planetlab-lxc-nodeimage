@@ -108,8 +108,8 @@ for pkgs in $(ls ../build/config.%{pldistro}/bootstrapfs-*.pkgs) ; do
     NAME=$(basename $pkgs .pkgs | sed -e s,bootstrapfs-,,)
     install -D -m 644 %{pldistro}-filesystems/bootstrapfs-${NAME}-%{extensionfamily}.tar.bz2 \
 		$RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-${NAME}-%{extensionfamily}.tar.bz2 
-    sha1sum $RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-${NAME}-%{nodefamily}.tar.bz2 > \
-        $RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-${NAME}-%{nodefamily}.tar.bz2.sha1sum
+    sha1sum $RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-${NAME}-%{extensionfamily}.tar.bz2 > \
+        $RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-${NAME}-%{extensionfamily}.tar.bz2.sha1sum
 
     install -D -m 644 %{pldistro}-filesystems/bootstrapfs-${NAME}-%{extensionfamily}.tar \
 		$RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-${NAME}-%{extensionfamily}.tar
