@@ -66,6 +66,11 @@ for the MyPLC side.
 [ -d bootstrapfs ] || ln -s BootstrapFS bootstrapfs
 pushd bootstrapfs
 ./build.sh %{pldistro} 
+for tar in *.tar *.tar.bz2; do 
+   echo "* Computing SHA1 checksum for $tar"
+   sha1sum $tar > $tar.sha1sum
+   chmod 444 $tar.sha1sum
+done
 popd
 
 ############################## server-side
@@ -93,28 +98,13 @@ rm -rf $RPM_BUILD_ROOT
 
 ############################## node-side
 pushd bootstrapfs
-
-install -D -m 644 bootstrapfs-%{nodefamily}.tar.bz2 \
-	$RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-%{nodefamily}.tar.bz2
-sha1sum $RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-%{nodefamily}.tar.bz2 > \
-        $RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-%{nodefamily}.tar.bz2.sha1sum
-
-install -D -m 644 bootstrapfs-%{nodefamily}.tar \
-	$RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-%{nodefamily}.tar
-sha1sum $RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-%{nodefamily}.tar > \
-        $RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-%{nodefamily}.tar.sha1sum
-
-for pkgs in $(ls ../build/config.%{pldistro}/bootstrapfs-*.pkgs) ; do 
-    NAME=$(basename $pkgs .pkgs | sed -e s,bootstrapfs-,,)
-    install -D -m 644 %{pldistro}-filesystems/bootstrapfs-${NAME}-%{extensionfamily}.tar.bz2 \
-		$RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-${NAME}-%{extensionfamily}.tar.bz2 
-    sha1sum $RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-${NAME}-%{extensionfamily}.tar.bz2 > \
-        $RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-${NAME}-%{extensionfamily}.tar.bz2.sha1sum
-
-    install -D -m 644 %{pldistro}-filesystems/bootstrapfs-${NAME}-%{extensionfamily}.tar \
-		$RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-${NAME}-%{extensionfamily}.tar
-    sha1sum $RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-${NAME}-%{extensionfamily}.tar > \
-        $RPM_BUILD_ROOT/var/www/html/boot/bootstrapfs-${NAME}-%{extensionfamily}.tar.sha1sum
+for out in *.tar *.tar.bz2 ; do
+    echo "* Installing $out"
+    install -D -m 644 $out $RPM_BUILD_ROOT/var/www/html/boot/$out
+done
+for out in *.sha1sum; do
+    echo "* Installing $out"
+    install -D -m 444 $out $RPM_BUILD_ROOT/var/www/html/boot/$out
 done
 popd
 
