@@ -8,7 +8,7 @@
 
 %define name bootstrapfs-%{nodefamily}
 %define version 2.0
-%define taglevel 5
+%define taglevel 6
 
 # pldistro already in the rpm name
 #%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
@@ -147,6 +147,10 @@ rm -rf $RPM_BUILD_ROOT
 /etc/plc.d
 
 %changelog
+* Mon Jul 05 2010 Baris Metin <Talip-Baris.Metin@sophia.inria.fr> - BootstrapFS-2.0-6
+- add sha1sum
+- module name changes
+
 * Tue Apr 27 2010 Talip Baris Metin <Talip-Baris.Metin@sophia.inria.fr> - BootstrapFS-2.0-5
 - support different flavours of vservers on nodes
 
