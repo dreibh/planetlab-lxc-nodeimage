@@ -8,22 +8,23 @@
 # %{distrorelease}  : e.g. 8
 # %{node_rpms_plus} : as a +++ separated list of rpms from the build dir
 
-%define nodefamily %{pldistro}-%{_arch}
+%define nodefamily %{pldistro}-%{distroname}-%{_arch}
+%define obsolete_nodefamily %{pldistro}-%{_arch}
 
 %define name noderepo-%{nodefamily}
-%define version 1.0
-%define taglevel 11
+%define version 2.0
+%define taglevel 6
 
 # pldistro already in the rpm name
 #%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
 %define release %{taglevel}%{?date:.%{date}}
 
-Vendor: PlanetLab
-Packager: PlanetLab Central <support@planet-lab.org>
+Vendor: OneLab
+Packager: PlanetLab Europe <build@onelab.eu>
 Distribution: PlanetLab %{plrelease}
 URL: %(echo %{url} | cut -d ' ' -f 2)
 
-Summary: The initial content of the yum repository for nodes
+Summary: The yum repository for nodes, to be installed on the myplc-side
 Name: %{name}
 Version: %{version}
 Release: %{release}
@@ -36,6 +37,10 @@ BuildArch: noarch
 
 BuildRequires: rsync 
 Requires: myplc
+
+# 5.0 now has 3-fold nodefamily
+%define obsolete_nodefamily %{pldistro}-%{_arch}
+Obsoletes: noderepo-%{obsolete_nodefamily}
 
 %define debug_package %{nil}
 
@@ -65,6 +70,10 @@ install -D -m 644 %{_topdir}/RPMS/yumgroups.xml $RPM_BUILD_ROOT/var/www/html/ins
 rm -rf $RPM_BUILD_ROOT
 
 %post
+# it would at first glance seem to make sense to invoke service plc start gpg here as well, 
+# as noderepo might get installed before myplc gets even started 
+# this however exhibit a deadlock, as rpm --almatches -e gpg-pubkey waits for transaction lock
+# that is help by the calling yum/rpm
 service plc start packages
 
 %files
@@ -74,6 +83,31 @@ service plc start packages
 %config(noreplace) /var/www/html/install-rpms/%{nodefamily}/yumgroups.xml
 
 %changelog
+* Mon Jul 05 2010 Baris Metin <Talip-Baris.Metin@sophia.inria.fr> - BootstrapFS-2.0-6
+- add sha1sum
+- module name changes
+
+* Tue Apr 27 2010 Talip Baris Metin <Talip-Baris.Metin@sophia.inria.fr> - BootstrapFS-2.0-5
+- support different flavours of vservers on nodes
+
+* Mon Apr 12 2010 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - BootstrapFS-2.0-4
+- fix unmatched $ in URL svn keywords
+
+* Fri Apr 02 2010 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - BootstrapFS-2.0-3
+- choice between various pldistros is not made at build time, but at run time
+- relies on GetNodeFlavour to expose the node's fcdistro - requires PLCAPI-5.0-5
+- in addition, the baseurl for the myplc repo is http:// and not https:// anymore
+- the https method does not work on fedora 12, and GPG is used below anyway
+
+* Fri Mar 12 2010 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - BootstrapFS-2.0-2
+- new slicerepo package for exposing stuff to slivers
+
+* Fri Jan 29 2010 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - BootstrapFS-2.0-1
+- first working version of 5.0:
+- pld.c/, db-config.d/ and nodeconfig/ scripts should now sit in the module they belong to
+- nodefailiy is 3-fold with pldistro-fcdistro-arch
+- new module nodeyum; first draft has the php scripts and conf_files for tweaking nodes yum config
+
 * Mon Jan 04 2010 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - BootstrapFS-1.0-11
 - for building on fedora12
 
@@ -114,3 +148,5 @@ service plc start packages
 
 * Tue Mar 4 2008 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> -
 - Initial build.
+
+%define module_current_branch 1.0
