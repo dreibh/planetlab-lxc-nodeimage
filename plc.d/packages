@@ -55,6 +55,9 @@ case "$1" in
                 if [[ $(basename $repository1) == ${DISTRO}* ]]  \
                     && [[ $(basename $repository2) == ${DISTRO}* ]] \
                     && [[ $repository1 != $repository2 ]] ; then
+			rm -rf $repository2/${VSERVER_PKG}*
+			rm -rf $repository2/${VSERVER_SYS_SLICES_PKG}*
+
                         ln -s $repository1/${VSERVER_PKG}* $repository2
                         ln -s $repository1/${VSERVER_SYS_SLICES_PKG}* $repository2
                 fi
@@ -68,7 +71,7 @@ case "$1" in
 	    new_stamps=
 	    # is there a need to refresh yum metadata
 	    need_yum_arch=
-	    need_createrepo=
+	    need_createrepo=true # always run createrepo as links may change for vserver packages
 
 	    # right after installation, no package is present
 	    # but we still need to create index 
