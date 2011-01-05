@@ -1,8 +1,3 @@
-#
-# $Id$
-#
-%define url $URL$
-
 # build is expected to export the following rpm variables
 # %{distroname}     : e.g. Fedora
 # %{distrorelease}  : e.g. 8
@@ -22,7 +17,7 @@
 Vendor: OneLab
 Packager: PlanetLab Europe <build@onelab.eu>
 Distribution: PlanetLab %{plrelease}
-URL: %(echo %{url} | cut -d ' ' -f 2)
+URL: %{SCMURL}
 
 Summary: The yum repository for slices, to be installed on the myplc-side
 Name: %{name}
