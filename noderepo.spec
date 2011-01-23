@@ -8,7 +8,7 @@
 
 %define name noderepo-%{nodefamily}
 %define version 2.0
-%define taglevel 6
+%define taglevel 7
 
 # pldistro already in the rpm name
 #%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
@@ -78,6 +78,10 @@ service plc start packages
 %config(noreplace) /var/www/html/install-rpms/%{nodefamily}/yumgroups.xml
 
 %changelog
+* Sun Jan 23 2011 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - bootstrapfs-2.0-7
+- yum repo template for f14 nodes
+- tweaks the way /etc/plc.d/packages works
+
 * Mon Jul 05 2010 Baris Metin <Talip-Baris.Metin@sophia.inria.fr> - BootstrapFS-2.0-6
 - add sha1sum
 - module name changes
