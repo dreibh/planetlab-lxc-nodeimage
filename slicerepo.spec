@@ -8,7 +8,7 @@
 
 %define name slicerepo-%{nodefamily}
 %define version 2.0
-%define taglevel 7
+%define taglevel 8
 
 # pldistro already in the rpm name
 #%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
@@ -76,6 +76,9 @@ service plc start packages
 %config(noreplace) /var/www/html/install-rpms/slice-%{nodefamily}/yumgroups.xml
 
 %changelog
+* Thu Jan 27 2011 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - bootstrapfs-2.0-8
+- no semantic change - attempt to speed up build
+
 * Sun Jan 23 2011 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - bootstrapfs-2.0-7
 - yum repo template for f14 nodes
 - tweaks the way /etc/plc.d/packages works
