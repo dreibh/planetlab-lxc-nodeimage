@@ -35,11 +35,6 @@ case "$1" in
 	    repositories="$@"
 	fi
 
-	### availability of repo indexing tools
-	# new one
-	type -p createrepo > /dev/null && have_createrepo="true"
-
-
         ### symlink vserver-PLDISTRO* and vserver-systemslices-PLDISTRO*
         ### packages to each repository to be able to create different
         ### flavours of vservers on nodes
@@ -70,7 +65,7 @@ case "$1" in
 
 	    # right after installation, no package is present
 	    # but we still need to create index 
-	    [ -n "$have_createrepo" -a ! -f $repository/repodata/repomd.xml ] && need_createrepo=true
+	    [ ! -f $repository/repodata/repomd.xml ] && need_createrepo=true
 	    
 	    for package in $(find $repository/ -name '*.rpm') ; do
 	        stamp=$repository/signed-stamps/$(basename $package).signed
@@ -80,7 +75,7 @@ case "$1" in
 		    new_stamps="$new_stamps $stamp"
 		fi
 		# Or than createrepo database
-		[ -n "$have_createrepo" ] && [ $package -nt $repository/repodata/repomd.xml ] && need_createrepo=true
+		[ $package -nt $repository/repodata/repomd.xml ] && need_createrepo=true
 	    done
 
 	    if [ -n "$new_rpms" ] ; then
