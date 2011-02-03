@@ -1,6 +1,4 @@
 #!/bin/bash
-# $Id$
-# $URL$
 #
 # priority: 1200
 #
@@ -38,8 +36,6 @@ case "$1" in
 	fi
 
 	### availability of repo indexing tools
-	# old one - might be needed for old-style nodes
-	type -p yum-arch > /dev/null && have_yum_arch="true"
 	# new one
 	type -p createrepo > /dev/null && have_createrepo="true"
 
@@ -70,12 +66,10 @@ case "$1" in
 	    # and the corresponding stamps
 	    new_stamps=
 	    # is there a need to refresh yum metadata
-	    need_yum_arch=
 	    need_createrepo=true # always run createrepo as links may change for vserver packages
 
 	    # right after installation, no package is present
 	    # but we still need to create index 
-	    [ -n "$have_yum_arch" -a ! -f $repository/headers/header.info ] && need_yum_arch=true
 	    [ -n "$have_createrepo" -a ! -f $repository/repodata/repomd.xml ] && need_createrepo=true
 	    
 	    for package in $(find $repository/ -name '*.rpm') ; do
@@ -85,8 +79,6 @@ case "$1" in
 		    new_rpms="$new_rpms $package"
 		    new_stamps="$new_stamps $stamp"
 		fi
-		# Or than yum-arch headers
-		[ -n "$have_yum_arch" ] && [ $package -nt $repository/headers/header.info ] && need_yum_arch=true
 		# Or than createrepo database
 		[ -n "$have_createrepo" ] && [ $package -nt $repository/repodata/repomd.xml ] && need_createrepo=true
 	    done
@@ -107,14 +99,6 @@ case "$1" in
 	    fi
 
 	    # Update repository index / yum metadata. 
-
-	    if [ -n "$need_yum_arch" ] ; then
-		# yum-arch sometimes leaves behind
-		# .oldheaders and .olddata directories accidentally.
-		rm -rf $repository/{.oldheaders,.olddata}
-		yum-arch $repository 
-		check
-	    fi
 
 	    if [ -n "$need_createrepo" ] ; then
 		if [ -f $repository/yumgroups.xml ] ; then
