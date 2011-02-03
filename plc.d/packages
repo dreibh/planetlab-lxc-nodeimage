@@ -6,6 +6,7 @@
 #
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2006 The Trustees of Princeton University
+# Thierry Parmentelat <thierry.parmentelat@inria.fr>
 #
 
 # Source function library and configuration
@@ -15,8 +16,57 @@
 # Be verbose
 set -x
 
+#################### hack yumgroups
+# if we've installed for several flavours
+# we create cross links in install-rpms like this one
+# ./onelab-f8-i386/vserver-onelab-f12-i386-5.0-6.2011.02.03.i686.rpm 
+#   -> /var/www/html/install-rpms/onelab-f12-i386/vserver-onelab-f12-i386-5.0-6.2011.02.03.i686.rpm
+#
+# but this won't make it to the nodes until they are insered in yumgroups.xml in the PlanetLab group
+# 
+
+function hack_yumgroups () {
+    repo=$1; shift
+
+    pushd $repo >& /dev/null
+    pwd
+    vsrpms=$(find . -name 'vserver*rpm')
+    echo found vsrpms $vsrpms
+    if [ ! -f yumgroups.xml ] ; then
+	echo "hack_yumgroups: could not find yumgroups in $(pwd)" 
+    elif [ -z "$vsrpms" ] ; then
+	echo "No need to hack yumgroups, no foreign vserver package found"
+    else
+	cp yumgroups.xml yumgroups.xml.hacking
+	# remove references to package vserver-
+	grep -v '>vserver-' yumgroups.xml.hacking > yumgroups.xml
+	# build a list of lines with corresponding rpm names
+	insert=""
+	for vsrpm in $vsrpms; do
+	    rpmname=$(rpm -q --qf '%{name}' -p $vsrpm)
+	    echo found file $vsrpm with name $rpmname
+	    insert="$insert<packagereq type=\"mandatory\">$rpmname</packagereq>"
+	done
+	echo 'inserting' $insert
+	# insert in yumgroups at the right place -- first packages in the PlanetLab group
+	ed yumgroups.xml <<EOF
+1
+/name>PlanetLab<
+/packagelist
++
+i
+$insert
+.
+w
+q
+EOF
+    fi
+    popd >& /dev/null
+}
+
+####################
 case "$1" in
-    start)
+    start|force)
 	if [ "$PLC_BOOT_ENABLED" != "1" ] ; then
 	    exit 0
 	fi
@@ -26,7 +76,8 @@ case "$1" in
 
 	shopt -s nullglob
 
-	shift
+	mode=$1; shift
+
 	if [[ -z "$@" ]] ; then
 	    # use all subdirs in install-rpms by default
 	    repositories=/var/www/html/install-rpms/*
@@ -35,39 +86,58 @@ case "$1" in
 	    repositories="$@"
 	fi
 
-        ### symlink vserver-PLDISTRO* and vserver-systemslices-PLDISTRO*
-        ### packages to each repository to be able to create different
-        ### flavours of vservers on nodes
-        for repository1 in $repositories; do
-            DISTRO=${PLC_FLAVOUR_SLICE_PLDISTRO}
-            VSERVER_PKG=vserver-$(basename $repository1)
-            VSERVER_SYS_SLICES_PKG=vserver-systemslices-$(basename $repository1)
-            for repository2 in $repositories; do
-                if [[ $(basename $repository1) == ${DISTRO}* ]]  \
-                    && [[ $(basename $repository2) == ${DISTRO}* ]] \
-                    && [[ $repository1 != $repository2 ]] ; then
-			rm -rf $repository2/${VSERVER_PKG}*
-			rm -rf $repository2/${VSERVER_SYS_SLICES_PKG}*
+	##########
+	# deal with the vserver packages
+	# symlink all instances of plain 'vserver-*rpm' in all repos
+	# and cleanup old links 
+	vsrpms=$(find $repositories -name 'vserver*rpm' -a -type f)
+	vslinks=$(find $repositories -name 'vserver*rpm' -a -type l)
 
-                        ln -s $repository1/${VSERVER_PKG}* $repository2
-                        ln -s $repository1/${VSERVER_SYS_SLICES_PKG}* $repository2
-                fi
-            done
-        done
+	for vslink in $vslinks; do
+	    [ ! -e $vslink ] && echo removing old $vslink
+	done
 
+	for repo in $repositories; do
+	    for vsrpm in $vsrpms; do
+	    # if in the repo we're dealing with, ignore
+		if [ "$(echo $vsrpm | sed -e s,^$repo,,)" != $vsrpm ] ; then
+		    continue
+		fi
+		b=$(basename $vsrpm)
+		link=$repo/$b
+		if [ ! -e $link ] ; then
+		    echo "creating symlink $link towards $vsrpm"
+		fi
+	    done
+	done
+
+	##########
+	# now that the symlinks are OK, we can tweak yumgroups
+	for repository in $repositories; do
+	    hack_yumgroups $repository
+	done
+
+	########## sign plain packages
 	for repository in $repositories ; do
 	    # the rpms that need signing
 	    new_rpms=
 	    # and the corresponding stamps
 	    new_stamps=
 	    # is there a need to refresh yum metadata
-	    need_createrepo=true # always run createrepo as links may change for vserver packages
+	    # a safe approach would be to always run createrepo
+	    # however this is painfully slow with multi-flavour installed
+	    need_createrepo= 
+	    # however if we run this script like
+	    # /etc/plc.d/packages force
+	    # then we force a createrepo
+	    [ "$mode" == force ] && need_createrepo=true
 
 	    # right after installation, no package is present
 	    # but we still need to create index 
 	    [ ! -f $repository/repodata/repomd.xml ] && need_createrepo=true
-	    
-	    for package in $(find $repository/ -name '*.rpm') ; do
+
+	    # it's not helpful to sign symlinks that will get signed on their own
+	    for package in $(find $repository/ -name '*.rpm' -a \! -type l) ; do
 	        stamp=$repository/signed-stamps/$(basename $package).signed
 		# If package is newer than signature stamp
 		if [ $package -nt $stamp ] ; then
@@ -121,10 +191,11 @@ case "$1" in
 	    rm -rf $repository/signed-stamps
 	    rm -rf $repository/repodata
 	    rm -rf $repository/headers
+	    find $repository -type l | xargs rm
 	done
 	;;
     *)
-        echo "Usage: $0 start|clean [repo ..]"
+        echo "Usage: $0 start|force|clean [repo ..]"
 	;;
 esac
 
