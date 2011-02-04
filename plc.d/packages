@@ -160,7 +160,7 @@ case "$1" in
 		    --define "_gpg_path /etc/planetlab" \
 		    --define "_gpg_name $PLC_MAIL_SUPPORT_ADDRESS" \
 		    --resign $new_rpms && touch $new_stamps
-		check
+#		check
 	    fi
 
 	    # Update repository index / yum metadata. 
@@ -168,10 +168,11 @@ case "$1" in
 	    if [ -n "$need_createrepo" ] ; then
 		if [ -f $repository/yumgroups.xml ] ; then
 		    createrepo --quiet -g yumgroups.xml $repository 
+		    check
 		else
 		    createrepo --quiet $repository
+		    check
 		fi
-		check
 	    fi
 	done
 
