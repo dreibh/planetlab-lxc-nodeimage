@@ -94,7 +94,7 @@ case "$1" in
 	vslinks=$(find $repositories -name 'vserver*rpm' -a -type l)
 
 	for vslink in $vslinks; do
-	    [ ! -e $vslink ] && echo removing old $vslink
+	    [ ! -e $vslink ] && { echo removing old $vslink; rm $vslink; }
 	done
 
 	for repo in $repositories; do
@@ -107,6 +107,7 @@ case "$1" in
 		link=$repo/$b
 		if [ ! -e $link ] ; then
 		    echo "creating symlink $link towards $vsrpm"
+		    ln -s $vsrpm $link
 		fi
 	    done
 	done
