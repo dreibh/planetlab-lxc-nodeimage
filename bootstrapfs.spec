@@ -5,7 +5,7 @@
 
 %define name bootstrapfs-%{nodefamily}
 %define version 2.0
-%define taglevel 8
+%define taglevel 9
 
 # pldistro already in the rpm name
 #%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
@@ -150,6 +150,9 @@ rm -rf $RPM_BUILD_ROOT
 /etc/plc.d
 
 %changelog
+* Fri Feb 04 2011 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - bootstrapfs-2.0-9
+- for multi-flavours : 'packages' step in plc.d now handles vserver links and related hacks in yumgroups
+
 * Thu Jan 27 2011 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - bootstrapfs-2.0-8
 - no semantic change - attempt to speed up build
 
