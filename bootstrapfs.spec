@@ -34,6 +34,8 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch: noarch
 
 Requires: tar, gnupg, sharutils, bzip2
+# this is for plc.d/packages that uses ed for hacking yumgroups.xml
+Requires: ed
 
 # 5.0 now has 3-fold nodefamily
 %define obsolete_nodefamily %{pldistro}-%{_arch}
