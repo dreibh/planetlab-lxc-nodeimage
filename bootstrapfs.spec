@@ -5,7 +5,7 @@
 
 %define name bootstrapfs-%{nodefamily}
 %define version 2.0
-%define taglevel 9
+%define taglevel 10
 
 # pldistro already in the rpm name
 #%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
@@ -152,6 +152,9 @@ rm -rf $RPM_BUILD_ROOT
 /etc/plc.d
 
 %changelog
+* Thu Feb 17 2011 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - bootstrapfs-2.0-10
+- bugfix for multi-flavour deployments
+
 * Fri Feb 04 2011 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - bootstrapfs-2.0-9
 - for multi-flavours : 'packages' step in plc.d now handles vserver links and related hacks in yumgroups
 
