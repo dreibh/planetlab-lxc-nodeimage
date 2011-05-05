@@ -64,6 +64,15 @@ EOF
     popd >& /dev/null
 }
 
+#################### xxx fixme xxx
+# I'm seeing weird things with f14 nodes and an f8 myplc server
+# I suspect that the f8-based createrepo binary does not do the right thing,
+# as the node (onelab09.pl.sophia.inria.fr) issues a lot of 
+# 'package does not match intended content'
+# before reaching this conclusion I have entirely rebuilt the server-side yum repos
+# by (*) checking the gpg keys (*) yum reinstalling all noderepos 
+# and on top of that manually re-running createrepo
+# of course the node had gone through yum clean all as well
 ####################
 case "$1" in
     start|force)
@@ -162,6 +171,8 @@ case "$1" in
 		    --define "_gpg_name $PLC_MAIL_SUPPORT_ADDRESS" \
 		    --resign $new_rpms && touch $new_stamps
 #		check
+		# if we sign at least one package then we need to reindex
+		need_createrepo=true
 	    fi
 
 	    # Update repository index / yum metadata. 
@@ -195,6 +206,12 @@ case "$1" in
 	    rm -rf $repository/headers
 	    find $repository -type l | xargs rm
 	done
+	;;
+    # (use this only if you have noderepos installed)
+    superclean)
+	find /var/www/html/install-rpms -name signed-stamps | xargs rm -rf
+	rpm -aq | grep noderepo | xargs yum -y reinstall
+	shift
 	;;
     *)
         echo "Usage: $0 start|force|clean [repo ..]"
