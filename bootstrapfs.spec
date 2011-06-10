@@ -5,7 +5,7 @@
 
 %define name bootstrapfs-%{nodefamily}
 %define version 2.0
-%define taglevel 10
+%define taglevel 11
 
 # pldistro already in the rpm name
 #%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
@@ -152,6 +152,9 @@ rm -rf $RPM_BUILD_ROOT
 /etc/plc.d
 
 %changelog
+* Mon Jun 06 2011 Baris Metin <bmetin@verivue.com> - bootstrapfs-2.0-11
+- sl6 templates
+
 * Thu Feb 17 2011 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - bootstrapfs-2.0-10
 - bugfix for multi-flavour deployments
 
