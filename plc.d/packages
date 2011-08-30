@@ -16,7 +16,36 @@
 # Be verbose
 set -x
 
-#################### hack yumgroups
+#################### 
+# 
+# (*) sometimes we have yum issuing errors like 'package does not match intended content'
+#  this means that the sha256 checksum of the downloaded pkg does not match 
+#    the sha256 checksum advertised in filelists.xml
+#  if you did run 'yum clean all' on the node, 
+#    this means that the repodata/ dir. on the server side is out of date 
+#  forcing a createrepo should solve this 
+# 
+# (*) also sometimes the node complains that a package is not signed
+#
+# so there quite obviously are some corner cases that are not well handled
+# hopefully the following subforms may be helpful to recover in these cases
+# 
+# /etc/plc.d/packages clean
+#   performs cleanup of the yum repositories and signed-stamps
+#   thus forcing the next 'start' command to re-sign and re-index everything
+# /etc/plc.d/packages superclean
+#   like 'clean', plus this will reinstall the noderepo rpms that you have, 
+#   that is to say restart from unsigned rpms
+# /etc/plc.d/packages start
+#   this is the usual form, it should be smart enough to only sign the packages that need to, 
+#   and to rerun createrepo when useful
+# /etc/plc.d/packages force
+#   same as 'start' but createrepo is run unconditionnally
+# 
+#################### 
+
+
+# helper for hacking yumgroups
 # if we've installed for several flavours
 # we create cross links in install-rpms like this one
 # ./onelab-f8-i386/vserver-onelab-f12-i386-5.0-6.2011.02.03.i686.rpm 
@@ -64,15 +93,6 @@ EOF
     popd >& /dev/null
 }
 
-#################### xxx fixme xxx
-# I'm seeing weird things with f14 nodes and an f8 myplc server
-# I suspect that the f8-based createrepo binary does not do the right thing,
-# as the node (onelab09.pl.sophia.inria.fr) issues a lot of 
-# 'package does not match intended content'
-# before reaching this conclusion I have entirely rebuilt the server-side yum repos
-# by (*) checking the gpg keys (*) yum reinstalling all noderepos 
-# and on top of that manually re-running createrepo
-# of course the node had gone through yum clean all as well
 ####################
 case "$1" in
     start|force)
@@ -156,6 +176,7 @@ case "$1" in
 		fi
 		# Or than createrepo database
 		[ $package -nt $repository/repodata/repomd.xml ] && need_createrepo=true
+		[ $package -nt $repository/repodata/filelists.xml.gz ] && need_createrepo=true
 	    done
 
 	    if [ -n "$new_rpms" ] ; then
@@ -203,15 +224,16 @@ case "$1" in
 	for repository in $repositories ; do
 	    rm -rf $repository/signed-stamps
 	    rm -rf $repository/repodata
-	    rm -rf $repository/headers
 	    find $repository -type l | xargs rm
 	done
 	;;
     # (use this only if you have noderepos installed)
     superclean)
-	find /var/www/html/install-rpms -name signed-stamps | xargs rm -rf
-	rpm -aq | grep noderepo | xargs yum -y reinstall
 	shift
+	find /var/www/html/install-rpms -name signed-stamps | xargs rm -rf
+	find /var/www/html/install-rpms -name repodata | xargs rm -rf
+	find /var/www/html/install-rpms -type l | xargs rm
+	rpm -aq | grep noderepo | xargs yum -y reinstall
 	;;
     *)
         echo "Usage: $0 start|force|clean [repo ..]"
