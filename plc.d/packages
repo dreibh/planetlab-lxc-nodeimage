@@ -42,6 +42,7 @@ set -x
 # /etc/plc.d/packages force
 #   same as 'start' but createrepo is run unconditionnally
 # 
+# PS. I suspect sometimes the signing fails and the script does not notice properly
 #################### 
 
 
