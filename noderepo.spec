@@ -8,7 +8,7 @@
 
 %define name noderepo-%{nodefamily}
 %define version 2.0
-%define taglevel 12
+%define taglevel 13
 
 # pldistro already in the rpm name
 #%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
@@ -84,6 +84,10 @@ service plc start packages
 %config(noreplace) /var/www/html/install-rpms/%{nodefamily}/yumgroups.xml
 
 %changelog
+* Wed Aug 31 2011 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - bootstrapfs-2.0-13
+- plc.d/packages: rewrote comments about some corner cases where it fails
+- plc.d/packages: marginally more robust
+
 * Fri Jun 10 2011 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - bootstrapfs-2.0-12
 - minor tweak in plc.d/packages
 
