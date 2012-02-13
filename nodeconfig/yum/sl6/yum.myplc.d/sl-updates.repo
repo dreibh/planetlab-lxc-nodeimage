@@ -6,7 +6,7 @@ baseurl=http://ftp.scientificlinux.org/linux/scientific/$releasever/$basearch/up
 		ftp://ftp.scientificlinux.org/linux/scientific/$releasever/$basearch/updates/security/
 #mirrorlist=http://ftp.scientificlinux.org/linux/scientific/mirrorlist/sl-security-6.txt
 enabled=1
-@KEXCLUDE@
+@NODEYUMEXCLUDE@
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-sl file:///etc/pki/rpm-gpg/RPM-GPG-KEY-dawson
 
@@ -18,7 +18,7 @@ baseurl=http://ftp.scientificlinux.org/linux/scientific/$releasever/$basearch/up
 		ftp://ftp.scientificlinux.org/linux/scientific/$releasever/$basearch/updates/fastbugs/
 #mirrorlist=http://ftp.scientificlinux.org/linux/scientific/mirrorlist/sl-fastbugs-6.txt
 enabled=0
-@KEXCLUDE@
+@NODEYUMEXCLUDE@
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-sl file:///etc/pki/rpm-gpg/RPM-GPG-KEY-dawson
 

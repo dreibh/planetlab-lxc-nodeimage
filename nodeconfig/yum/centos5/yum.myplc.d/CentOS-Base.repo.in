@@ -1,4 +1,3 @@
-# $URL$
 # CentOS-Base.repo
 #
 # This file uses a new mirrorlist system developed by Lance Davis for CentOS.
@@ -16,7 +15,7 @@
 name=CentOS-$releasever - Base
 mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=os
 #baseurl=http://mirror.centos.org/centos/$releasever/os/$basearch/
-@KEXCLUDE@
+@NODEYUMEXCLUDE@
 gpgcheck=1
 enabled=1
 gpgkey=http://mirror.centos.org/centos/RPM-GPG-KEY-CentOS-5
@@ -26,7 +25,7 @@ gpgkey=http://mirror.centos.org/centos/RPM-GPG-KEY-CentOS-5
 name=CentOS-$releasever - Updates
 mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=updates
 #baseurl=http://mirror.centos.org/centos/$releasever/updates/$basearch/
-@KEXCLUDE@
+@NODEYUMEXCLUDE@
 gpgcheck=1
 enabled=1
 gpgkey=http://mirror.centos.org/centos/RPM-GPG-KEY-CentOS-5
@@ -36,7 +35,7 @@ gpgkey=http://mirror.centos.org/centos/RPM-GPG-KEY-CentOS-5
 name=CentOS-$releasever - Addons
 mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=addons
 #baseurl=http://mirror.centos.org/centos/$releasever/addons/$basearch/
-@KEXCLUDE@
+@NODEYUMEXCLUDE@
 gpgcheck=1
 enabled=0
 gpgkey=http://mirror.centos.org/centos/RPM-GPG-KEY-CentOS-5
@@ -46,7 +45,7 @@ gpgkey=http://mirror.centos.org/centos/RPM-GPG-KEY-CentOS-5
 name=CentOS-$releasever - Extras
 mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=extras
 #baseurl=http://mirror.centos.org/centos/$releasever/extras/$basearch/
-@KEXCLUDE@
+@NODEYUMEXCLUDE@
 gpgcheck=1
 enabled=0
 gpgkey=http://mirror.centos.org/centos/RPM-GPG-KEY-CentOS-5
@@ -56,7 +55,7 @@ gpgkey=http://mirror.centos.org/centos/RPM-GPG-KEY-CentOS-5
 name=CentOS-$releasever - Plus
 mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=centosplus
 #baseurl=http://mirror.centos.org/centos/$releasever/centosplus/$basearch/
-@KEXCLUDE@
+@NODEYUMEXCLUDE@
 gpgcheck=1
 enabled=0
 gpgkey=http://mirror.centos.org/centos/RPM-GPG-KEY-CentOS-5

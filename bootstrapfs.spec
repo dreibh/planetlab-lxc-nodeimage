@@ -84,13 +84,13 @@ pushd bootstrapfs/nodeconfig/yum
 # scan fcdistros and catenate all repos in 'stock.repo' so db-config can be distro-independant
 for fcdistro in $(ls); do
     [ -d $fcdistro ] || continue
-    # get kexcludes for that distro
-    KEXCLUDE="exclude=$(../../../build/getkexcludes.sh -f $fcdistro)"
+    # get packages to exclude on nodes for that fcdistro/pldistro
+    NODEYUMEXCLUDE="exclude=$(../../../build/nodeyumexcludes.sh $fcdistro $pldistro)"
     pushd $fcdistro/yum.myplc.d
-    echo "* Handling KEXCLUDE in yum repo for $fcdistro ($KEXCLUDE)"
+    echo "* Handling NODEYUMEXCLUDE in yum repo for $fcdistro/$pldistro ($NODEYUMEXCLUDE)"
     for filein in $(find . -name '*.in') ; do
 	file=$(echo $filein | sed -e "s,\.in$,,")
-	sed -e "s,@KEXCLUDE@,$KEXCLUDE,g" $filein > $file
+	sed -e "s,@NODEYUMEXCLUDE@,$NODEYUMEXCLUDE,g" $filein > $file
     done
     rm -f stock.repo
     cat *.repo > stock.repo
