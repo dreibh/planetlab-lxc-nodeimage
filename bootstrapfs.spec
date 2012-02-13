@@ -85,7 +85,7 @@ pushd bootstrapfs/nodeconfig/yum
 for fcdistro in $(ls); do
     [ -d $fcdistro ] || continue
     # get packages to exclude on nodes for that fcdistro/pldistro
-    NODEYUMEXCLUDE="exclude=$(../../../build/nodeyumexcludes.sh $fcdistro $pldistro)"
+    NODEYUMEXCLUDE="exclude=$(../../../build/nodeyumexclude.sh $fcdistro $pldistro)"
     pushd $fcdistro/yum.myplc.d
     echo "* Handling NODEYUMEXCLUDE in yum repo for $fcdistro/$pldistro ($NODEYUMEXCLUDE)"
     for filein in $(find . -name '*.in') ; do
