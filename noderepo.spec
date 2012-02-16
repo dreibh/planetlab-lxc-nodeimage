@@ -8,7 +8,7 @@
 
 %define name noderepo-%{nodefamily}
 %define version 2.0
-%define taglevel 13
+%define taglevel 14
 
 # pldistro already in the rpm name
 #%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
@@ -84,6 +84,9 @@ service plc start packages
 %config(noreplace) /var/www/html/install-rpms/%{nodefamily}/yumgroups.xml
 
 %changelog
+* Thu Feb 16 2012 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - bootstrapfs-2.0-14
+- changes needed for build with yumexcludes defined in a separate pkgs file
+
 * Wed Aug 31 2011 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - bootstrapfs-2.0-13
 - plc.d/packages: rewrote comments about some corner cases where it fails
 - plc.d/packages: marginally more robust
