@@ -6,8 +6,6 @@
 # Marc E. Fiuczynski <mef@cs.princeton.edu>
 # Copyright (C) 2005-2007 The Trustees of Princeton University
 #
-# $Id$
-# $URL$
 
 #
 # This will build the bootstrafs-*.tar.bz2 images, which comprises
