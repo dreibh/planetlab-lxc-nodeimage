@@ -1,11 +1,9 @@
-#
-
 %define nodefamily %{pldistro}-%{distroname}-%{_arch}
 %define extensionfamily %{distroname}-%{_arch}
 
-%define name bootstrapfs-%{nodefamily}
-%define version 2.0
-%define taglevel 14
+%define name nodeimage-%{nodefamily}
+%define version 2.1
+%define taglevel 1
 
 # pldistro already in the rpm name
 #%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
@@ -22,7 +20,7 @@ Packager: PlanetLab Central <support@planet-lab.org>
 Distribution: PlanetLab %{plrelease}
 URL: %{SCMURL}
 
-Summary: The PlanetLab Bootstrap Filesystems for %{nodefamily}
+Summary: The PlanetLab nodeimage filesystems for %{nodefamily}
 Name: %{name}
 Version: %{version}
 Release: %{release}
@@ -37,6 +35,8 @@ Requires: tar, gnupg, sharutils, bzip2
 # this is for plc.d/packages that uses ed for hacking yumgroups.xml
 Requires: ed
 
+# 5.1 now uses new name nodeimage
+Obsoletes: bootstrapfs-%{nodefamily}
 # 5.0 now has 3-fold nodefamily
 %define obsolete_nodefamily %{pldistro}-%{_arch}
 Obsoletes: bootstrapfs-%{obsolete_nodefamily}
@@ -46,11 +46,11 @@ AutoReqProv: no
 
 %description
 
-The PlanetLab Bootstrap Filesystem(s) are downloaded by the
-BootManager to instantiate a node with a new filesystem.
+The PlanetLab nodeimage filesystem is downloaded by the
+BootManager to reinstall a node with a new filesystem.
 
 %package plain
-Summary: The (uncompressed) PlanetLab Bootstrap Filesystems for %{nodefamily}
+Summary: The (uncompressed) PlanetLab nodeimage filesystem for %{nodefamily}
 Group: System Environment/Base
 %description plain
 This package provides the same functions as %{name} but with uncompressed tarball for faster tests.
@@ -68,8 +68,7 @@ for the MyPLC side.
 %build
 
 ############################## node-side
-[ -d bootstrapfs ] || ln -s BootstrapFS bootstrapfs
-pushd bootstrapfs
+pushd nodeimage
 ./build.sh %{pldistro} 
 for tar in *.tar *.tar.bz2; do 
    echo "* Computing SHA1 checksum for $tar"
@@ -80,7 +79,7 @@ popd
 
 ############################## server-side
 # ship all fcdistros for multi-fcdistros myplc, and let the php scripts do the right thing
-pushd bootstrapfs/nodeconfig/yum
+pushd nodeimage/nodeconfig/yum
 # scan fcdistros and catenate all repos in 'stock.repo' so db-config can be distro-independant
 for fcdistro in $(ls); do
     [ -d $fcdistro ] || continue
@@ -102,7 +101,7 @@ popd
 rm -rf $RPM_BUILD_ROOT
 
 ############################## node-side
-pushd bootstrapfs
+pushd nodeimage
 for out in *.tar *.tar.bz2 ; do
     echo "* Installing $out"
     install -D -m 644 $out $RPM_BUILD_ROOT/var/www/html/boot/$out
@@ -115,7 +114,7 @@ popd
 
 ############################## server-side
 # ship all fcdistros for multi-fcdistros myplc, and let the php scripts do the right thing
-pushd bootstrapfs
+pushd nodeimage
 echo "* Installing MyPLC-side nodes yum config utilities (support for multi-fcdistro)"
 mkdir -p $RPM_BUILD_ROOT/var/www/html/yum/
 rsync -av ./nodeconfig/yum/	$RPM_BUILD_ROOT/var/www/html/yum/
