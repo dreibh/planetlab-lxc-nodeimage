@@ -49,8 +49,8 @@ set -x
 # helper for hacking yumgroups
 # if we've installed for several flavours
 # we create cross links in install-rpms like this one
-# ./onelab-f8-i386/vserver-onelab-f12-i386-5.0-6.2011.02.03.i686.rpm 
-#   -> /var/www/html/install-rpms/onelab-f12-i386/vserver-onelab-f12-i386-5.0-6.2011.02.03.i686.rpm
+# ./onelab-f8-i386/sliceimage-onelab-f12-i386-5.0-6.2011.02.03.i686.rpm 
+#   -> /var/www/html/install-rpms/onelab-f12-i386/sliceimage-onelab-f12-i386-5.0-6.2011.02.03.i686.rpm
 #
 # but this won't make it to the nodes until they are insered in yumgroups.xml in the PlanetLab group
 # 
@@ -60,21 +60,21 @@ function hack_yumgroups () {
 
     pushd $repo >& /dev/null
     pwd
-    vsrpms=$(find . -name 'vserver*rpm')
-    echo found vsrpms $vsrpms
+    sirpms=$(find . -name 'sliceimage*rpm')
+    echo found sirpms $sirpms
     if [ ! -f yumgroups.xml ] ; then
 	echo "hack_yumgroups: could not find yumgroups in $(pwd)" 
-    elif [ -z "$vsrpms" ] ; then
-	echo "No need to hack yumgroups, no foreign vserver package found"
+    elif [ -z "$sirpms" ] ; then
+	echo "No need to hack yumgroups, no foreign sliceimage package found"
     else
 	cp yumgroups.xml yumgroups.xml.hacking
-	# remove references to package vserver-
-	grep -v '>vserver-' yumgroups.xml.hacking > yumgroups.xml
+	# remove references to package sliceimage-
+	grep -v '>sliceimage-' yumgroups.xml.hacking > yumgroups.xml
 	# build a list of lines with corresponding rpm names
 	insert=""
-	for vsrpm in $vsrpms; do
-	    rpmname=$(rpm -q --qf '%{name}' -p $vsrpm)
-	    echo found file $vsrpm with name $rpmname
+	for sirpm in $sirpms; do
+	    rpmname=$(rpm -q --qf '%{name}' -p $sirpm)
+	    echo found file $sirpm with name $rpmname
 	    insert="$insert<packagereq type=\"mandatory\">$rpmname</packagereq>"
 	done
 	echo 'inserting' $insert
@@ -117,27 +117,27 @@ case "$1" in
 	fi
 
 	##########
-	# deal with the vserver packages
-	# symlink all instances of plain 'vserver-*rpm' in all repos
+	# deal with the sliceimage packages
+	# symlink all instances of plain 'sliceimage-*rpm' in all repos
 	# and cleanup old links 
-	vsrpms=$(find $repositories -name 'vserver*rpm' -a -type f)
-	vslinks=$(find $repositories -name 'vserver*rpm' -a -type l)
+	sirpms=$(find $repositories -name 'sliceimage*rpm' -a -type f)
+	silinks=$(find $repositories -name 'sliceimage*rpm' -a -type l)
 
-	for vslink in $vslinks; do
-	    [ ! -e $vslink ] && { echo removing old $vslink; rm $vslink; }
+	for silink in $silinks; do
+	    [ ! -e $silink ] && { echo removing old $silink; rm $silink; }
 	done
 
 	for repo in $repositories; do
-	    for vsrpm in $vsrpms; do
+	    for sirpm in $sirpms; do
 	    # if in the repo we're dealing with, ignore
-		if [ "$(echo $vsrpm | sed -e s,^$repo,,)" != $vsrpm ] ; then
+		if [ "$(echo $sirpm | sed -e s,^$repo,,)" != $sirpm ] ; then
 		    continue
 		fi
-		b=$(basename $vsrpm)
+		b=$(basename $sirpm)
 		link=$repo/$b
 		if [ ! -e $link ] ; then
-		    echo "creating symlink $link towards $vsrpm"
-		    ln -s $vsrpm $link
+		    echo "creating symlink $link towards $sirpm"
+		    ln -s $sirpm $link
 		fi
 	    done
 	done
