@@ -3,7 +3,7 @@
 
 %define name nodeimage-%{nodefamily}
 %define version 2.1
-%define taglevel 1
+%define taglevel 0
 
 # pldistro already in the rpm name
 #%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}

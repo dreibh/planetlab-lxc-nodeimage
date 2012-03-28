@@ -7,8 +7,8 @@
 %define obsolete_nodefamily %{pldistro}-%{_arch}
 
 %define name slicerepo-%{nodefamily}
-%define version 2.0
-%define taglevel 14
+%define version 2.1
+%define taglevel 0
 
 # pldistro already in the rpm name
 #%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
