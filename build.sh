@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Build bootstrapfs-*.tar.bz2, the reference image(s) for PlanetLab nodes.
+# Build tgz root image for PlanetLab nodes.
 #
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Marc E. Fiuczynski <mef@cs.princeton.edu>
@@ -50,33 +50,33 @@ set -e
 # would like to pretend that we are.
 export PL_BOOTCD=1
 
-# Populate a minimal /dev and then the files for the base bootstrapfs content
+# Populate a minimal /dev and then the files for the base nodeimage content
 vref=${PWD}/base
 install -d -m 755 ${vref}
 pl_root_makedevs $vref
 
-pkgsfile=$(pl_locateDistroFile ../build/ ${pldistro} bootstrapfs.pkgs)
-echo "* Building Bootstrapfs for ${pldistro}: $(date)"
+pkgsfile=$(pl_locateDistroFile ../build/ ${pldistro} nodeimage.pkgs)
+echo "* Building nodeimage for ${pldistro}: $(date)"
 # -k = exclude kernel* packages
 pl_root_mkfedora ${vref} ${pldistro} $pkgsfile
 
 # optionally invoke a post processing script after packages from
 # $pkgsfile have been installed
-postfile=$(pl_locateDistroFile ../build/ ${pldistro} bootstrapfs.post || : )
+postfile=$(pl_locateDistroFile ../build/ ${pldistro} nodeimage.post || : )
 [ -f $postfile ] && { echo "Running post install file $postfile" ; /bin/bash $postfile ${vref} || : ; }
 
 displayed=""
 
-# for distros that do not define bootstrapfs variants
-pkgs_count=$(ls ../build/config.${pldistro}/bootstrapfs-*.pkgs 2> /dev/null | wc -l)
-[ $pkgs_count -gt 0 ] && for pkgs in $(ls ../build/config.${pldistro}/bootstrapfs-*.pkgs); do
-    NAME=$(basename $pkgs .pkgs | sed -e s,bootstrapfs-,,)
+# for distros that do define node extensions
+pkgs_count=$(ls ../build/config.${pldistro}/nodeimage-*.pkgs 2> /dev/null | wc -l)
+[ $pkgs_count -gt 0 ] && for pkgs in $(ls ../build/config.${pldistro}/nodeimage-*.pkgs); do
+    NAME=$(basename $pkgs .pkgs | sed -e s,nodeimage-,,)
 
-    [ -z "$displayed" ] && echo "* Handling ${pldistro} bootstrapfs extensions"
+    [ -z "$displayed" ] && echo "* Handling ${pldistro} nodeimage extensions"
     displayed=true
 
-    extension_plain=bootstrapfs-${NAME}-${extensionfamily}.tar
-    extension_name=bootstrapfs-${NAME}-${extensionfamily}.tar.bz2
+    extension_plain=nodeimage-${NAME}-${extensionfamily}.tar
+    extension_name=nodeimage-${NAME}-${extensionfamily}.tar.bz2
 
     echo "* Start Building $extension_name: $(date)"
 
@@ -109,7 +109,7 @@ pkgs_count=$(ls ../build/config.${pldistro}/bootstrapfs-*.pkgs 2> /dev/null | wc
 
     # optionally invoke a post processing script after packages from
     # $pkgs have been installed
-    postfile=$(pl_locateDistroFile ../build/ ${pldistro} bootstrapfs-${NAME}.post || : )
+    postfile=$(pl_locateDistroFile ../build/ ${pldistro} nodeimage-${NAME}.post || : )
     [ -f $postfile ] && { echo "Running post install file $postfile" ; /bin/bash $postfile ${vdir} || : ; }
 
     # Create a copy of the ${NAME} bootstrap filesystem w/o the base
