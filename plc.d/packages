@@ -121,7 +121,8 @@ case "$1" in
 	# symlink all instances of plain 'sliceimage-*rpm' in all repos
 	# and cleanup old links 
 	sirpms=$(find $repositories -name 'sliceimage*rpm' -a -type f)
-	silinks=$(find $repositories -name 'sliceimage*rpm' -a -type l)
+	# for nicer upgrades, also remove symlinks from 5.0
+	silinks=$(find $repositories '(' -name 'sliceimage*rpm' -o -name 'vserver*rpm' ')' -a -type l)
 
 	for silink in $silinks; do
 	    [ ! -e $silink ] && { echo removing old $silink; rm $silink; }
