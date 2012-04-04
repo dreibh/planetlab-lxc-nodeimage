@@ -108,12 +108,21 @@ case "$1" in
 
 	mode=$1; shift
 
-	if [[ -z "$@" ]] ; then
-	    # use all subdirs in install-rpms by default
-	    repositories=/var/www/html/install-rpms/*
-	else
-	    # else use argv
+	# on PLC there is a need to select the repos as there are quite a few in there
+	# would contain names or patterns relative to install-rpms
+	explicit_list=/var/www/html/install-rpms/PACKAGES
+
+	# use argv if provided
+	if [[ -n "$@" ]] ; then
 	    repositories="$@"
+	elif [ -f $explicit_list ] ; then
+	    repositories=""
+	    for name in $(grep -v '#' $explicit_list); do 
+		repositories="$repositories /var/www/html/install-rpms/$name"
+	    done
+	else
+  	    # use all subdirs in install-rpms by default
+	    repositories=/var/www/html/install-rpms/*
 	fi
 
 	##########
