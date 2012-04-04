@@ -115,36 +115,39 @@ case "$1" in
 	# use argv if provided
 	if [[ -n "$@" ]] ; then
 	    repositories="$@"
+	    cross_repositories="$@"
 	elif [ -f $explicit_list ] ; then
-	    repositories=""
+	    cross_repositories=""
 	    for name in $(grep -v '#' $explicit_list); do 
-		repositories="$repositories /var/www/html/install-rpms/$name"
+		cross_repositories="$cross_repositories /var/www/html/install-rpms/$name"
 	    done
+	    repositories=/var/www/html/install-rpms/*
 	else
   	    # use all subdirs in install-rpms by default
 	    repositories=/var/www/html/install-rpms/*
+	    cross_repositories=/var/www/html/install-rpms/*
 	fi
 
 	##########
 	# deal with the sliceimage packages
 	# symlink all instances of plain 'sliceimage-*rpm' in all repos
 	# and cleanup old links 
-	sirpms=$(find $repositories -name 'sliceimage*rpm' -a -type f)
+	sirpms=$(find $cross_repositories -name 'sliceimage*rpm' -a -type f)
 	# for nicer upgrades, also remove symlinks from 5.0
-	silinks=$(find $repositories '(' -name 'sliceimage*rpm' -o -name 'vserver*rpm' ')' -a -type l)
+	silinks=$(find $cross_repositories '(' -name 'sliceimage*rpm' -o -name 'vserver*rpm' ')' -a -type l)
 
 	for silink in $silinks; do
 	    [ ! -e $silink ] && { echo removing old $silink; rm $silink; }
 	done
 
-	for repo in $repositories; do
+	for repository in $cross_repositories; do
 	    for sirpm in $sirpms; do
-	    # if in the repo we're dealing with, ignore
-		if [ "$(echo $sirpm | sed -e s,^$repo,,)" != $sirpm ] ; then
+	    # if in the repository we're dealing with, ignore
+		if [ "$(echo $sirpm | sed -e s,^$repository,,)" != $sirpm ] ; then
 		    continue
 		fi
 		b=$(basename $sirpm)
-		link=$repo/$b
+		link=$repository/$b
 		if [ ! -e $link ] ; then
 		    echo "creating symlink $link towards $sirpm"
 		    ln -s $sirpm $link
@@ -154,7 +157,7 @@ case "$1" in
 
 	##########
 	# now that the symlinks are OK, we can tweak yumgroups
-	for repository in $repositories; do
+	for repository in $cross_repositories; do
 	    hack_yumgroups $repository
 	done
 
