@@ -108,25 +108,26 @@ case "$1" in
 
 	mode=$1; shift
 
-	# on PLC there is a need to select the repos as there are quite a few in there
-	# would contain names or patterns relative to install-rpms
-	explicit_list=/var/www/html/install-rpms/PACKAGES
+	# hack for PLC
+	# there are some very old repos there, as well as some sensitive areas
+	# so by convention the repositories that have a 'PRESERVE' file won't
+	# be touched by the cross-flavour stuff
+	# i.e. no symlinks get created to or from there,
+	# and yumgroups is untouched
 
 	# use argv if provided
 	if [[ -n "$@" ]] ; then
 	    repositories="$@"
-	    cross_repositories="$@"
-	elif [ -f $explicit_list ] ; then
-	    cross_repositories=""
-	    for name in $(grep -v '#' $explicit_list); do 
-		cross_repositories="$cross_repositories /var/www/html/install-rpms/$name"
-	    done
-	    repositories=/var/www/html/install-rpms/*
 	else
   	    # use all subdirs in install-rpms by default
 	    repositories=/var/www/html/install-rpms/*
-	    cross_repositories=/var/www/html/install-rpms/*
 	fi
+
+	# filter out PRESERVE'd repos
+	cross_repositories=""
+	for repository in $repositories; do
+	    [ -f $repository/PRESERVE ] || cross_repositories="$cross_repositories $repository"
+	done
 
 	##########
 	# deal with the sliceimage packages
@@ -163,6 +164,8 @@ case "$1" in
 
 	########## sign plain packages
 	for repository in $repositories ; do
+	    # skip non-directory
+	    [ -d $repository ] || continue
 	    # the rpms that need signing
 	    new_rpms=
 	    # and the corresponding stamps
