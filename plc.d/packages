@@ -119,8 +119,8 @@ case "$1" in
 	if [[ -n "$@" ]] ; then
 	    repositories="$@"
 	else
-  	    # use all subdirs in install-rpms by default
-	    repositories=/var/www/html/install-rpms/*
+  	    # use all subdirs in install-rpms by default, except the slice repos
+	    repositories=$(ls -d /var/www/html/install-rpms/* | grep -v /slice-)
 	fi
 
 	# filter out PRESERVE'd repos
