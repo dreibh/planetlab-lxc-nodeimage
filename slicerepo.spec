@@ -8,7 +8,7 @@
 
 %define name slicerepo-%{nodefamily}
 %define version 2.1
-%define taglevel 1
+%define taglevel 2
 
 # pldistro already in the rpm name
 #%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
@@ -76,6 +76,9 @@ service plc start packages
 %config(noreplace) /var/www/html/install-rpms/slice-%{nodefamily}/yumgroups.xml
 
 %changelog
+* Fri Sep 28 2012 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - nodeimage-2.1-2
+- exclude slice repos when running plc.d/packages start
+
 * Fri Apr 13 2012 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - nodeimage-2.1-1
 - renamed as nodeimage - works on both mainline and lxc
 
