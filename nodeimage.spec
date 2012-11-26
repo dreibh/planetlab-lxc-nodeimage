@@ -3,7 +3,7 @@
 
 %define name nodeimage-%{nodefamily}
 %define version 2.1
-%define taglevel 2
+%define taglevel 3
 
 # pldistro already in the rpm name
 #%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
@@ -151,6 +151,9 @@ rm -rf $RPM_BUILD_ROOT
 /etc/plc.d
 
 %changelog
+* Mon Nov 26 2012 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - nodeimage-2.1-3
+- fix /etc/plc.d/packages for empty install dirs
+
 * Fri Sep 28 2012 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - nodeimage-2.1-2
 - exclude slice repos when running plc.d/packages start
 
