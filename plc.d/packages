@@ -122,7 +122,7 @@ case "$1" in
   	    # consider all subdirs in install-rpms by default, except the slice repos
 	    # use find instead of ls - for the corner case where the dir. is empty
 	    # (thanks Thomas Dreibholz for the heads up)
-	    repositories=$(find /var/www/html/install-rpms -maxdepth 1 -mindepth 1 -type d \! -name 'slice-*' >& /dev/null)
+	    repositories=$(find /var/www/html/install-rpms -maxdepth 1 -mindepth 1 -type d \! -name 'slice-*' 2> /dev/null)
 	fi
 
 	# filter out PRESERVE'd repos
