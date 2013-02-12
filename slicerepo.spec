@@ -8,7 +8,7 @@
 
 %define name slicerepo-%{nodefamily}
 %define version 2.1
-%define taglevel 3
+%define taglevel 4
 
 # pldistro already in the rpm name
 #%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
@@ -76,6 +76,8 @@ service plc start packages
 %config(noreplace) /var/www/html/install-rpms/slice-%{nodefamily}/yumgroups.xml
 
 %changelog
+* Mon Feb 11 2013 Stephen Soltesz <soltesz@opentechinstitute.org> - nodeimage-2.1-4
+
 * Mon Nov 26 2012 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - nodeimage-2.1-3
 - fix /etc/plc.d/packages for empty install dirs
 
