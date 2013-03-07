@@ -2,8 +2,8 @@
 %define extensionfamily %{distroname}-%{_arch}
 
 %define name nodeimage-%{nodefamily}
-%define version 2.1
-%define taglevel 4
+%define version 5.2
+%define taglevel 0
 
 # pldistro already in the rpm name
 #%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
