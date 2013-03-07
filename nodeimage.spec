@@ -3,7 +3,7 @@
 
 %define name nodeimage-%{nodefamily}
 %define version 5.2
-%define taglevel 0
+%define taglevel 1
 
 # pldistro already in the rpm name
 #%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
@@ -151,6 +151,9 @@ rm -rf $RPM_BUILD_ROOT
 /etc/plc.d
 
 %changelog
+* Thu Mar 07 2013 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - nodeimage-5.2-1
+- add support for f18 yum config
+
 * Mon Feb 11 2013 Stephen Soltesz <soltesz@opentechinstitute.org> - nodeimage-2.1-4
 
 * Mon Nov 26 2012 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - nodeimage-2.1-3
