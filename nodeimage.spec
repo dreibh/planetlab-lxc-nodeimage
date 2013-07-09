@@ -71,9 +71,11 @@ for the MyPLC side.
 pushd nodeimage
 ./build.sh %{pldistro} 
 for tar in *.tar *.tar.bz2; do 
-   echo "* Computing SHA1 checksum for $tar"
-   sha1sum $tar > $tar.sha1sum
-   chmod 444 $tar.sha1sum
+    start=$(date +%H-%M-%S)
+    sha1sum $tar > $tar.sha1sum
+    chmod 444 $tar.sha1sum
+    end=$(date +%H-%M-%S)
+    echo "* Computed SHA1 checksum for $tar ($start .. $end) "
 done
 popd
 
@@ -96,6 +98,8 @@ for fcdistro in $(ls); do
     popd
 done
 popd
+
+echo "* nodeconfig/yum done $(date +%H-%M-%S)"
 
 %install
 rm -rf $RPM_BUILD_ROOT
