@@ -8,7 +8,7 @@
 
 %define name noderepo-%{nodefamily}
 %define version 5.2
-%define taglevel 2
+%define taglevel 3
 
 # pldistro already in the rpm name
 #%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
@@ -84,6 +84,9 @@ service plc start packages
 %config(noreplace) /var/www/html/install-rpms/%{nodefamily}/yumgroups.xml
 
 %changelog
+* Fri Mar 21 2014 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - nodeimage-5.2-3
+- template for f20 yum config
+
 * Sun Jul 14 2013 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - nodeimage-5.2-2
 - more timestamps during build
 
