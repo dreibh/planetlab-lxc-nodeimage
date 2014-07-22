@@ -75,7 +75,15 @@ rm -rf $RPM_BUILD_ROOT
 # as noderepo might get installed before myplc gets even started 
 # this however exhibit a deadlock, as rpm --almatches -e gpg-pubkey waits for transaction lock
 # that is help by the calling yum/rpm
-service plc start packages
+if [ ! -e /bin/systemctl ] ; then
+   echo "Systemd is not there. Just starting PLC to handle packages (may fail of PLC is not configured) ..."
+   service plc start packages
+elif /bin/systemctl status plc >/dev/null ; then
+   echo "Restarting PLC to handle packages ..."
+   service plc restart packages
+else
+   echo "The PLC is not running. Skipping a restart ..."
+fi
 
 %files
 %defattr(-,root,root,-)
