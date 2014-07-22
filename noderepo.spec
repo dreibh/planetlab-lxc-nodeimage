@@ -92,6 +92,9 @@ fi
 %config(noreplace) /var/www/html/install-rpms/%{nodefamily}/yumgroups.xml
 
 %changelog
+* Tue Jul 22 2014 Thomas Dreibholz <dreibh@simula.no> - nodeimage-5.2-4
+- Post-install fix: trying to start PLC only when it is running, in order to avoid false-positive error message during build.
+
 * Fri Mar 21 2014 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - nodeimage-5.2-3
 - template for f20 yum config
 
