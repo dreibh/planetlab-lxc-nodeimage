@@ -3,7 +3,7 @@
 
 %define name nodeimage-%{nodefamily}
 %define version 5.2
-%define taglevel 3
+%define taglevel 4
 
 # pldistro already in the rpm name
 #%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
@@ -155,6 +155,10 @@ rm -rf $RPM_BUILD_ROOT
 /etc/plc.d
 
 %changelog
+* Wed Feb 18 2015 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - nodeimage-5.2-4
+- minor change; start plc packages only at run-time, not build-time
+- only available on systems that have systemctl
+
 * Fri Mar 21 2014 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - nodeimage-5.2-3
 - template for f20 yum config
 
