@@ -150,6 +150,9 @@ done
 # Build the base Bootstrap filesystem
 # clean out yum cache to reduce space requirements
 yum -c ${vref}/etc/mkfedora-yum.conf --installroot=${vref} -y clean all
+# create stamp on node image to help out node upgrades in the future
+mkdir -p ${vref}/etc/planetlab
+echo ${nodefamily} > ${vref}/etc/planetlab/nodefamily
 
 bootstrapfs_plain=bootstrapfs-${nodefamily}.tar
 bootstrapfs_name=bootstrapfs-${nodefamily}.tar.bz2
