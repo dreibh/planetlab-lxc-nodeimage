@@ -56,7 +56,3 @@ echo "#\n";
 echo "# yum.php could not find the following path\n";
 echo "# " . $fc_name . "\n";
 echo "# bailing out\n";
-
-
-
-
