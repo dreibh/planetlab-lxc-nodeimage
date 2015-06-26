@@ -8,7 +8,7 @@
 
 %define name slicerepo-%{nodefamily}
 %define version 5.2
-%define taglevel 4
+%define taglevel 5
 
 # pldistro already in the rpm name
 #%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
@@ -84,6 +84,11 @@ fi
 %config(noreplace) /var/www/html/install-rpms/slice-%{nodefamily}/yumgroups.xml
 
 %changelog
+* Fri Jun 26 2015 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - nodeimage-5.2-5
+- the yum config for nodes on f21 and f22
+- define a new config_file for /etc/dnf/dnf.conf so that /etc/yum.myplc.d
+- is taken into account on f22
+
 * Wed Feb 18 2015 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - nodeimage-5.2-4
 - minor change; start plc packages only at run-time, not build-time
 - only available on systems that have systemctl
