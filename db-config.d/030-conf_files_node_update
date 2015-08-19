@@ -26,6 +26,21 @@ conf_files = [
           'preinstall_cmd' : '', 'postinstall_cmd' : '', 'error_cmd' : '',
           'ignore_cmd_errors' : False,
           'always_update' : False},
+        # starting with fedora 22 we need to tweak /etc/dnf/dnf.conf,
+        # not /etc/yum.conf
+        { 'enabled' : True,
+          'source' : 'yum/yum.php?path=dnf/dnf.conf',
+          'dest' : '/etc/dnf/dnf.conf',
+          'file_permissions' : '644', 'file_owner' : 'root', 'file_group' : 'root',
+          # ensure /etc/yum.repos.d is created as a symlink to /etc/yum.myplc.d
+          # since dnf under fedora22 does not seem to have a means to configure
+          # this location anymore
+          'preinstall_cmd' : '',
+          'postinstall_cmd' : 'bash -c "[ -d /etc/yum.repos.d ] || ln -sf /etc/yum.myplc.d /etc/yum.repos.d"',
+          'error_cmd' : '',
+          'ignore_cmd_errors' : False,
+          # here again, we need to make sure postinstall is always executed
+          'always_update' : True},
     
 # NodeUpdate
         { 'enabled' : True,
