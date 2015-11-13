@@ -8,7 +8,7 @@
 
 %define name slicerepo-%{nodefamily}
 %define version 5.2
-%define taglevel 5
+%define taglevel 6
 
 # pldistro already in the rpm name
 #%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
@@ -84,6 +84,9 @@ fi
 %config(noreplace) /var/www/html/install-rpms/slice-%{nodefamily}/yumgroups.xml
 
 %changelog
+* Fri Nov 13 2015 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - nodeimage-5.2-6
+- fix for f22 and dnf.conf
+
 * Fri Jun 26 2015 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - nodeimage-5.2-5
 - the yum config for nodes on f21 and f22
 - define a new config_file for /etc/dnf/dnf.conf so that /etc/yum.myplc.d
