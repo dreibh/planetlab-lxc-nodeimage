@@ -230,6 +230,22 @@ case "$1" in
 
 	result "$MESSAGE"
 	;;
+    index)
+	# just rerun createrepo
+	shift
+	if [[ -z "$@" ]] ; then
+	    # use all subdirs in install-rpms by default
+	    repositories=/var/www/html/install-rpms/*
+	else
+	    # else use argv
+	    repositories=$@
+	fi
+
+	for repository in $repositories ; do
+	    echo ============================== running createrepo in $repository
+	    createrepo -g yumgroups.xml $repository
+	done
+	;;
     clean)
 	shift
 	if [[ -z "$@" ]] ; then
