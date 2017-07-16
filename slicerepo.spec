@@ -8,7 +8,7 @@
 
 %define name slicerepo-%{nodefamily}
 %define version 5.2
-%define taglevel 7
+%define taglevel 8
 
 # pldistro already in the rpm name
 #%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
@@ -84,6 +84,10 @@ fi
 %config(noreplace) /var/www/html/install-rpms/slice-%{nodefamily}/yumgroups.xml
 
 %changelog
+* Sun Jul 16 2017 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - nodeimage-5.2-8
+- fix the fedora and fedora-updates repo definitions for f25
+- add /etc/plc.d/packages index
+
 * Sun Jul 10 2016 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - nodeimage-5.2-7
 - yum config ; deprecates old fedora releases, add support for f23/f24
 
