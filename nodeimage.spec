@@ -3,7 +3,7 @@
 
 %define name nodeimage-%{nodefamily}
 %define version 5.2
-%define taglevel 8
+%define taglevel 9
 
 # pldistro already in the rpm name
 #%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
@@ -155,6 +155,10 @@ rm -rf $RPM_BUILD_ROOT
 /etc/plc.d
 
 %changelog
+* Mon Jan 07 2019 Thierry <Parmentelat> - nodeimage-5.2-9
+- ok for f27 and f29
+- cleanup old distros
+
 * Sun Jul 16 2017 Thierry Parmentelat <thierry.parmentelat@sophia.inria.fr> - nodeimage-5.2-8
 - fix the fedora and fedora-updates repo definitions for f25
 - add /etc/plc.d/packages index
