@@ -31,7 +31,14 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 # other archs must be able to install this
 BuildArch: noarch
 
-Requires: tar, gnupg, sharutils, bzip2
+Requires: tar, sharutils, bzip2
+# see myplc/plc.d/gpg for more details on the gnupg / gpg topic
+%if "%{distro}" == "Fedora" && %{distrorelease} >= 31
+Requires: gnupg1
+%else
+Requires: gnupg
+%endif
+
 # this is for plc.d/packages that uses ed for hacking yumgroups.xml
 Requires: ed
 
