@@ -45,7 +45,7 @@ Requires: ed
 Obsoletes: bootstrapfs-%{nodefamily}
 # 5.0 now has 3-fold nodefamily
 %define obsolete_nodefamily %{pldistro}-%{_arch}
-Obsoletes: bootstrapfs-%{obsolete_nodefamily}
+# Obsoletes: bootstrapfs-{obsolete_nodefamily}
 
 AutoReqProv: no
 %define debug_package %{nil}
