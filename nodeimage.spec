@@ -105,7 +105,7 @@ for fcdistro in $(ls); do
 done
 popd
 
-echo "* nodeconfig/yum done $(date +%H-%M-%S)"
+echo "* nodeconfig/yum done $(date --iso-8601=seconds)"
 
 %install
 rm -rf $RPM_BUILD_ROOT
