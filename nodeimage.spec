@@ -77,10 +77,10 @@ for the MyPLC side.
 pushd nodeimage
 ./build.sh %{pldistro} 
 for tar in *.tar *.tar.bz2; do 
-    start=$(date +%H-%M-%S)
+    start=$(date --iso-8601=seconds)
     sha1sum $tar > $tar.sha1sum
     chmod 444 $tar.sha1sum
-    end=$(date +%H-%M-%S)
+    end=$(date --iso-8601=seconds)
     echo "* Computed SHA1 checksum for $tar ($start .. $end) "
 done
 popd
