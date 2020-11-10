@@ -6,7 +6,6 @@
 %define taglevel 9
 
 # pldistro already in the rpm name
-#%define release %{taglevel}%{?pldistro:.%{pldistro}}%{?date:.%{date}}
 %define release %{taglevel}%{?date:.%{date}}
 
 # we don't really need the standard postinstall process from rpm that
